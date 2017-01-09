@@ -39,7 +39,7 @@ sg-page {
   display: block;    
 }
 
-.page {
+sg-page .page {
   font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -61,21 +61,44 @@ sg-page {
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
-.page::-webkit-scrollbar {
+sg-page .page::-webkit-scrollbar {
   display: none;
 }
-.page__content {
-  background-color: #f9f9f9;
+
+sg-page .page_header {
   position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
-  bottom: 0px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  height: 60px;
+  z-index: 100;
 }
-.page__background {
+
+sg-page .page_footer {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  height: 60px;
+  background-color: #f9f9f9;
+  z-index: 100;
+}
+
+
+sg-page .page_content {
+  background-color: #f9f9f9;
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow-y: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  z-index: 3;
+}
+sg-page .page_background {
   background-color: #f9f9f9;
   position: absolute;
   top: 0px;
@@ -85,4 +108,18 @@ sg-page {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  z-index: 2;
+}
+
+sg-page .page_model {
+  background-color: #f9f9f9;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  z-index: 200;
 }
