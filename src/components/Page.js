@@ -32,18 +32,21 @@ export default class extends BaseComponent {
     const header = this.props.renderHeader ? this.props.renderHeader() : null;
     const footer = this.props.renderFooter ? this.props.renderFooter() : null;
     const fixed  = this.props.fixed ? this.props.fixed() : null;
-    const model  = this.props.model ? this.props.model() : null;
+    const model  = this.props.renderModel ? this.props.model() : null;
     return(
       <sg-page > 
         <div className = 'page'>
           <div className = 'page_background' />
-          <div className = 'page_header'> 
+          <div className = 'page_model w3-container'> 
+            {model} 
+          </div>
+          <div className = 'page_header w3-container'> 
             {header} 
           </div>
-          <div className = 'page_content'>
+          <div className = 'page_content w3-container'>
             {this.props.children}
           </div>
-          <div className = 'page_footer'> 
+          <div className = 'page_footer w3-container'> 
             {footer} 
           </div>
         </div>
