@@ -129,4 +129,5 @@ sg-page .page_model {
 
 sg-page .page_model.hide {
   height : 0;
+  z-index: 1;
 }
