@@ -36,7 +36,7 @@ export default class extends BaseComponent {
       hideFooter : false,
       showModal : false,
       showOverlay : false
-    }
+    };
 
     this.page = {
       pushOverlay : this.pushOverlay.bind(this), 
@@ -54,7 +54,7 @@ export default class extends BaseComponent {
 
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.onInit) {
       this.props.onInit(this.page);
     }
