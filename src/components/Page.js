@@ -34,7 +34,7 @@ export default class extends BaseComponent {
     this.state = {
       hideHeader : false,
       hideFooter : false,
-      showModal : true,
+      showModal : false,
       showOverlay : false
     }
 
@@ -54,8 +54,10 @@ export default class extends BaseComponent {
 
   }
 
-  componentWillMount() {
-    this.pushOverlay(<button onClick = {this.popOverlay}> Close Overlay </button> );
+  componentDidMount() {
+    if (this.props.onInit) {
+      this.props.onInit(this.page);
+    }
   }
 
   parseModifier() {
