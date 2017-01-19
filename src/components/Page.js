@@ -35,7 +35,8 @@ export default class extends BaseComponent {
       hideHeader : false,
       hideFooter : false,
       showModal : false,
-      showOverlay : false
+      showOverlay : false,
+      contentPadTop : 0
     };
 
     this.page = {
@@ -49,7 +50,8 @@ export default class extends BaseComponent {
 
     this.bind(
       '_renderOverlay', 'pushOverlay', 'popOverlay',
-      'showModal', 'hideModal'
+      'showModal', 'hideModal',
+      'getHeaderElement'
     );
 
   }
@@ -58,6 +60,10 @@ export default class extends BaseComponent {
     if (this.props.onInit) {
       this.props.onInit(this.page);
     }
+  }
+
+  componentDidMount() {
+    this.setState({ contentPadTop : this.headerElement.clientHeight + 10 });
   }
 
   parseModifier() {
@@ -134,10 +140,11 @@ export default class extends BaseComponent {
           <div className = {`page_overlay ${style}-container ${this.state.showOverlay ? '' : 'hide'}`} >
             {this._renderOverlay()}
           </div>
-          <div className = {`page_header ${style}-container ${this.state.hideHeader ? 'hide' : ''}`} > 
+          <div className = {`page_header ${style}-container ${this.state.hideHeader ? 'hide' : ''}`} 
+               ref ={this.getHeaderElement} > 
             {header} 
           </div>
-          <div className = {`page_content ${style}-container`} >
+          <div className = {`page_content ${style}-container`} style = {{paddingTop : `${this.state.contentPadTop}px`}} >
             {this.props.children}
           </div>
           <div className = {`page_footer ${style}-container ${this.state.hideFooter ? 'hide' : ''}`}> 
@@ -146,6 +153,10 @@ export default class extends BaseComponent {
         </div>
       </sg-page>
     );
+  }
+
+  getHeaderElement(el) {
+    this.headerElement = el;
   }
 
 }

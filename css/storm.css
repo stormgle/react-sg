@@ -70,7 +70,6 @@ sg-page .page_header {
   top: 0px;
   left: 0px;
   right: 0px;
-  height: 60px;
   background-color: #f9f9f9;
   z-index: 100;
 }
@@ -84,7 +83,6 @@ sg-page .page_footer {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  height: 60px;
   background-color: #f9f9f9;
   z-index: 100;
 }
@@ -101,7 +99,6 @@ sg-page .page_content {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  padding-top: 60px;
   overflow-y: auto;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
