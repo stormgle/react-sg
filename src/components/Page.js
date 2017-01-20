@@ -51,7 +51,7 @@ export default class extends BaseComponent {
     this.bind(
       '_renderOverlay', 'pushOverlay', 'popOverlay',
       'showModal', 'hideModal',
-      'getHeaderElement'
+      '_getHeaderElement'
     );
 
   }
@@ -141,7 +141,7 @@ export default class extends BaseComponent {
             {this._renderOverlay()}
           </div>
           <div className = {`page_header ${style}-container ${this.state.hideHeader ? 'hide' : ''}`} 
-               ref ={this.getHeaderElement} > 
+               ref ={this._getHeaderElement} > 
             {header} 
           </div>
           <div className = {`page_content ${style}-container`} style = {{paddingTop : `${this.state.contentPadTop}px`}} >
@@ -155,7 +155,7 @@ export default class extends BaseComponent {
     );
   }
 
-  getHeaderElement(el) {
+  _getHeaderElement(el) {
     this.headerElement = el;
   }
 
