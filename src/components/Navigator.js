@@ -32,6 +32,32 @@ export default class extends BaseComponent {
      * */
     this.navigator = {}
 
+    this.routeStack = [];
+
+    this.state = {
+      currentRoute : {}
+    };
+
+  }
+
+  componentWillMount() {
+    
+    if (this.initialRouteStack) {
+      this.props.initialRouteStack.forEach(route => this.routeStack.push({...route}));
+    }
+    this.routeStack.push({...this.props.initialRoute});
+
+    const currentRoute = this.routeStack[this.routeStack.length - 1]
+
+    this.setState({ currentRoute });    
+  }
+
+  render() {
+    return (
+      <sg-navigation>
+        {this.renderRoute(this.state.currentRoute)}
+      </sg-navigation>
+    );
   }
 
 }
