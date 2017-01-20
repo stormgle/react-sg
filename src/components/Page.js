@@ -19,14 +19,14 @@ export default class extends BaseComponent {
    *  5 - Overlay layer
    *  6 - Modal layer
    * When a layer is hide, it move back to background layer
-   * @param {string} modifier - specify modifier style for Page 
-   * @param {function} renderHeader - render Header of Page
-   * @param {function} renderFooter - renderFooter of Page
-   * @param {function} renderFixed - render a fixed component on Page
-   * @param {function} renderModal - render a model cover entire of Page
-   * @param {function} onInit - function will be invoked after Page is mounted
-   * @param {function} onShow - function will be invoked after page has been shown
-   * @param {function} onHide - function will be invoked after page has been hide
+   * @param {String} modifier - specify modifier style for Page 
+   * @param {Function} renderHeader - render Header of Page
+   * @param {Function} renderFooter - renderFooter of Page
+   * @param {Function} renderFixed - render a fixed component on Page
+   * @param {Function} renderModal - render a model cover entire of Page
+   * @param {Function} onInit - function will be invoked after Page is mounted
+   * @param {Function} onShow - function will be invoked after page has been shown
+   * @param {Function} onHide - function will be invoked after page has been hide
    */
   constructor(props) {
     super(props);
