@@ -29,12 +29,12 @@ export default class extends BaseComponent {
      * 
      * push
      * pop
-     * resetRoute
-     * resetRouteStack
+     * reset
      * */
     this.navigator = { 
       push : this.push.bind(this) ,
       pop : this.pop.bind(this),
+      reset : this.reset.bind(this)
     };
 
     this.state = {
@@ -48,11 +48,7 @@ export default class extends BaseComponent {
   }
 
   componentWillMount() {
-    const routeStack = [];
-    if (this.props.initialRouteStack) {
-      this.props.initialRouteStack.forEach(route => routeStack.push(route));
-    }
-    if (!this.props.initialRoute) {
+    if (!this.props.initialRoute && !this.props.initialRouteStack) {
       Error.throw({
         severity : 'error',
         root : 'Navigator', 
@@ -60,8 +56,16 @@ export default class extends BaseComponent {
         detail : 'At least initialRoute or initialRoutStack must be defined'
       });
     }
-    routeStack.push(this.props.initialRoute);
+
+    const routeStack = [];
+    if (this.props.initialRouteStack) {
+      this.props.initialRouteStack.forEach(route => routeStack.push(route));
+    }
+    if (this.props.initialRoute) {
+      routeStack.push(this.props.initialRoute);      
+    }    
     this.setState({ routeStack });
+
   }
 
   render() {
@@ -93,5 +97,7 @@ export default class extends BaseComponent {
     }
     return this.navigator;
   }
+
+  reset(){}
 
 }
