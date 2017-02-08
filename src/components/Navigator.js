@@ -31,7 +31,8 @@ export default class extends BaseComponent {
      * resetRouteStack
      * */
     this.navigator = { 
-      push : this.push.bind(this) 
+      push : this.push.bind(this) ,
+      pop : this.pop.bind(this),
     };
 
     this.routeStack = [];
@@ -42,7 +43,7 @@ export default class extends BaseComponent {
 
     this.bind(
       '_updateCurrentRoute',
-      'push'
+      'push', 'pop',
     );
 
   }
@@ -69,6 +70,14 @@ export default class extends BaseComponent {
   push(route) {
     this.routeStack.push(route);
     this._updateCurrentRoute();
+    return this.navigator;
+  }
+
+  pop(route) {
+    if (this.routeStack.length > 1) {
+      this.routeStack.pop();
+      this._updateCurrentRoute();      
+    }
     return this.navigator;
   }
 
