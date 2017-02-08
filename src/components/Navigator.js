@@ -30,13 +30,20 @@ export default class extends BaseComponent {
      * resetRoute
      * resetRouteStack
      * */
-    this.navigator = {}
+    this.navigator = { 
+      push : this.push.bind(this) 
+    };
 
     this.routeStack = [];
 
     this.state = {
       currentRoute : {}
     };
+
+    this.bind(
+      '_updateCurrentRoute',
+      'push'
+    );
 
   }
 
@@ -47,9 +54,8 @@ export default class extends BaseComponent {
     }
     this.routeStack.push(this.props.initialRoute);
 
-    const currentRoute = this.routeStack[this.routeStack.length - 1]
-
-    this.setState({ currentRoute });    
+    this._updateCurrentRoute();
+        
   }
 
   render() {
@@ -58,6 +64,18 @@ export default class extends BaseComponent {
         {this.props.renderRoute(this.state.currentRoute, this.navigator)}
       </sg-navigation>
     );
+  }
+
+  push(route) {
+    this.routeStack.push(route);
+    this._updateCurrentRoute();
+    return this.navigator;
+  }
+
+  _updateCurrentRoute() {
+    const currentRoute = this.routeStack[this.routeStack.length - 1]
+    this.setState({ currentRoute });
+    return this;
   }
 
 }
