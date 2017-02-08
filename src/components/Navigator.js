@@ -41,11 +41,11 @@ export default class extends BaseComponent {
   }
 
   componentWillMount() {
-    
-    if (this.initialRouteStack) {
-      this.props.initialRouteStack.forEach(route => this.routeStack.push({...route}));
+
+    if (this.props.initialRouteStack) {
+      this.props.initialRouteStack.forEach(route => this.routeStack.push(route));
     }
-    this.routeStack.push({...this.props.initialRoute});
+    this.routeStack.push(this.props.initialRoute);
 
     const currentRoute = this.routeStack[this.routeStack.length - 1]
 
@@ -55,7 +55,7 @@ export default class extends BaseComponent {
   render() {
     return (
       <sg-navigation>
-        {this.renderRoute(this.state.currentRoute)}
+        {this.props.renderRoute(this.state.currentRoute, this.navigator)}
       </sg-navigation>
     );
   }
