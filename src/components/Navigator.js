@@ -42,7 +42,7 @@ export default class extends BaseComponent {
     };
 
     this.bind(
-      'push', 'pop',
+      'push', 'pop', 'reset'
     );
 
   }
@@ -98,6 +98,26 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
-  reset(){}
+  reset(routes) {
+    if (!routes) {
+      // reset to first route
+      const route = this.state.routeStack[0];
+      const routeStack = [route];
+      this.setState({ routeStack });
+      return this.navigator;      
+    }
+
+    if (Object.prototype.toString.call(routes) === '[object Array]') {
+      // reset with new route stack
+      const routeStack = [...routes];
+      this.setState({ routeStack });        
+    } else {
+      // reset with new route
+      const routeStack = [routes];
+      this.setState({ routeStack });
+    }
+    return this.navigator;
+
+  }
 
 }
