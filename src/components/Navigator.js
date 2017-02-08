@@ -35,56 +35,53 @@ export default class extends BaseComponent {
       pop : this.pop.bind(this),
     };
 
-    this.routeStack = [];
-
     this.state = {
-      currentRoute : {}
+      routeStack : []
     };
 
     this.bind(
-      '_updateCurrentRoute',
       'push', 'pop',
     );
 
   }
 
   componentWillMount() {
-
+    const routeStack = [];
     if (this.props.initialRouteStack) {
-      this.props.initialRouteStack.forEach(route => this.routeStack.push(route));
+      this.props.initialRouteStack.forEach(route => routeStack.push(route));
     }
-    this.routeStack.push(this.props.initialRoute);
-
-    this._updateCurrentRoute();
-        
+    routeStack.push(this.props.initialRoute);
+    this.setState({ routeStack });
   }
 
   render() {
     return (
       <sg-navigation>
-        {this.props.renderRoute(this.state.currentRoute, this.navigator)}
+        {this.state.routeStack.map( (route, id) => {
+          return (
+            <div className = 'nav-frame'>
+              {this.props.renderRoute(route, this.navigator)}
+            </div>
+          );
+        })}
       </sg-navigation>
     );
   }
 
-  push(route) {
-    this.routeStack.push(route);
-    this._updateCurrentRoute();
+  push(route) { 
+    const routeStack = [...this.state.routeStack];  
+    routeStack.push(route);
+    this.setState({ routeStack });
     return this.navigator;
   }
 
   pop(route) {
-    if (this.routeStack.length > 1) {
-      this.routeStack.pop();
-      this._updateCurrentRoute();      
+    if (this.state.routeStack.length > 1) {
+      const routeStack = [...this.state.routeStack];
+      routeStack.pop();
+      this.setState({ routeStack });      
     }
     return this.navigator;
-  }
-
-  _updateCurrentRoute() {
-    const currentRoute = this.routeStack[this.routeStack.length - 1]
-    this.setState({ currentRoute });
-    return this;
   }
 
 }
