@@ -4,6 +4,8 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
+import Error from '../util/Error'
+
 /**
  * Navigator component
  * @extends BaseComponent 
@@ -49,6 +51,14 @@ export default class extends BaseComponent {
     const routeStack = [];
     if (this.props.initialRouteStack) {
       this.props.initialRouteStack.forEach(route => routeStack.push(route));
+    }
+    if (!this.props.initialRoute) {
+      Error.throw({
+        severity : 'error',
+        root : 'Navigator', 
+        message : 'Could not find an initial route',
+        detail : 'At least initialRoute or initialRoutStack must be defined'
+      });
     }
     routeStack.push(this.props.initialRoute);
     this.setState({ routeStack });

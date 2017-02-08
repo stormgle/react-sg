@@ -25,8 +25,8 @@ export default class extends BaseComponent {
    * @param {Function} renderFixed - render a fixed component on Page
    * @param {Function} renderModal - render a model cover entire of Page
    * @param {Function} onInit - function will be invoked after Page is mounted
-   * @param {Function} onShow - function will be invoked after page has been shown
-   * @param {Function} onHide - function will be invoked after page has been hide
+   * @param {Function} onShow - function will be invoked after page has been shown ??
+   * @param {Function} onHide - function will be invoked after page has been hide ??
    */
   constructor(props) {
     super(props);
