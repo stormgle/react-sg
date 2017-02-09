@@ -6,6 +6,8 @@ import BaseComponent from './BaseComponent'
 
 import Error from '../util/Error'
 
+let uKey = 0;
+
 /**
  * Navigator component
  * @extends BaseComponent 
@@ -42,7 +44,7 @@ export default class extends BaseComponent {
     };
 
     this.bind(
-      'push', 'pop', 'reset'
+      '_pushToRouteStack', '_popFromRouteStack', 'push', 'pop', 'reset'
     );
 
   }
@@ -57,24 +59,23 @@ export default class extends BaseComponent {
       });
     }
 
-    const routeStack = [];
+    let routeStack = [];
     if (this.props.initialRouteStack) {
-      this.props.initialRouteStack.forEach(route => routeStack.push(route));
+      routeStack = this._pushToRouteStack(this.props.initialRouteStack);      
     }
     if (this.props.initialRoute) {
-      routeStack.push(this.props.initialRoute);      
+      routeStack = this._pushToRouteStack(this.props.initialRoute, routeStack);      
     }    
     this.setState({ routeStack });
-
   }
 
   render() {
     return (
       <sg-navigation>
-        {this.state.routeStack.map( (route, id) => {
+        {this.state.routeStack.map( stackEntry => {
           return (
-            <div className = 'nav-frame'>
-              {this.props.renderRoute(route, this.navigator)}
+            <div className = 'nav-frame' key = {stackEntry._$key} >
+              {this.props.renderRoute(stackEntry.route, this.navigator)}
             </div>
           );
         })}
@@ -83,41 +84,49 @@ export default class extends BaseComponent {
   }
 
   push(route) { 
-    const routeStack = [...this.state.routeStack];  
-    routeStack.push(route);
+    const routeStack = this._pushToRouteStack(route, this.state.routeStack);
     this.setState({ routeStack });
     return this.navigator;
   }
 
   pop(route) {
     if (this.state.routeStack.length > 1) {
-      const routeStack = [...this.state.routeStack];
-      routeStack.pop();
+      const routeStack = this._popFromRouteStack(this.state.routeStack);
       this.setState({ routeStack });      
     }
     return this.navigator;
   }
 
   reset(routes) {
-    if (!routes) {
+    if (routes) {
+      // reset stack and initialize with new routes
+      const routeStack = this._pushToRouteStack(routes);
+      this.setState({ routeStack });
+    } else {      
       // reset to first route
       const route = this.state.routeStack[0];
       const routeStack = [route];
-      this.setState({ routeStack });
-      return this.navigator;      
-    }
-
-    if (Object.prototype.toString.call(routes) === '[object Array]') {
-      // reset with new route stack
-      const routeStack = [...routes];
-      this.setState({ routeStack });        
-    } else {
-      // reset with new route
-      const routeStack = [routes];
-      this.setState({ routeStack });
+      this.setState({ routeStack }); 
     }
     return this.navigator;
+  }
 
+  _pushToRouteStack(routes, stack = []) {
+    const routeStack = stack.length > 0 ? [...stack] : [];
+    if (Object.prototype.toString.call(routes) !== '[object Array]') {
+      routes = [routes];
+    }
+    routes.forEach(route => {
+      uKey++;
+      routeStack.push({ _$key : uKey, route })
+    });
+    return routeStack;
+  }
+
+  _popFromRouteStack(stack) {
+    const routeStack = [...stack];
+    routeStack.pop();
+    return routeStack;
   }
 
 }
