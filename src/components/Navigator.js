@@ -4,7 +4,7 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
-import Error from '../util/Error'
+import Log from '../util/Log'
 
 let uKey = 0;
 
@@ -51,8 +51,7 @@ export default class extends BaseComponent {
 
   componentWillMount() {
     if (!this.props.initialRoute && !this.props.initialRouteStack) {
-      Error.throw({
-        severity : 'error',
+      Log.error({
         root : 'Navigator', 
         message : 'Could not find an initial route',
         detail : 'At least initialRoute or initialRoutStack must be defined'
