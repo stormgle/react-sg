@@ -130,9 +130,11 @@ export default class extends BaseComponent {
     const footer = this.props.renderFooter ? this.props.renderFooter(this.page) : null;
     const fixed  = this.props.renderFixed ? this.props.renderFixed(this.page) : null;
     const modal  = this.props.renderModal ? this.props.renderModal(this.page) : null;
+    const pageStyle = this.props.style || {};
+    const pageClass = this.props.className || ''; 
     return(
       <sg-page > 
-        <div className = 'page'>
+        <div className = 'page' >
           <div className = 'page_background' />
           <div className = {`page_modal ${style}-container ${this.state.showModal ? '' : 'hide'}`} > 
             {modal} 
@@ -144,7 +146,7 @@ export default class extends BaseComponent {
                ref ={this._getHeaderElement} > 
             {header} 
           </div>
-          <div className = {`page_content ${style}-container`} style = {{paddingTop : `${this.state.contentPadTop}px`}} >
+          <div className = {`page_content ${style}-container ${pageClass}`} style = {{paddingTop : `${this.state.contentPadTop}px`, ...pageStyle}} >
             {this.props.children}
           </div>
           <div className = {`page_footer ${style}-container ${this.state.hideFooter ? 'hide' : ''}`}> 
