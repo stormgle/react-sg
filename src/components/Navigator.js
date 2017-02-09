@@ -72,8 +72,9 @@ export default class extends BaseComponent {
     return (
       <sg-navigation>
         {this.state.routeStack.map( stackEntry => {
+          const animation = stackEntry.route.animation || '';
           return (
-            <div className = 'nav-frame' key = {stackEntry._$key} >
+            <div className = {`nav-frame ${animation}`} key = {stackEntry._$key} >
               {this.props.renderRoute(stackEntry.route, this.navigator)}
             </div>
           );
@@ -82,16 +83,30 @@ export default class extends BaseComponent {
     );
   }
 
-  push(route) { 
+  push(route) {
+    // add new route with animation
+    route.animation = 'enter-slide-right';
     const routeStack = this._pushToRouteStack(route, this.state.routeStack);
     this.setState({ routeStack });
+    // clear animation 
+    setTimeout(() => {
+      routeStack[routeStack.length-1].route.animation = null;
+      this.setState({ routeStack });
+    }, 250);
     return this.navigator;
   }
 
   pop(route) {
     if (this.state.routeStack.length > 1) {
-      const routeStack = this._popFromRouteStack(this.state.routeStack);
-      this.setState({ routeStack });      
+      // add animation for page pop out of screen
+      const _routeStack = this.state.routeStack;
+      _routeStack[_routeStack.length-1].route.animation = 'exit-slide-right'
+      this.setState({ routeStack : _routeStack });
+      // actual pop out route from stack 
+      setTimeout(() => {
+        const routeStack = this._popFromRouteStack(this.state.routeStack);
+        this.setState({ routeStack });
+      }, 250);            
     }
     return this.navigator;
   }
@@ -111,7 +126,7 @@ export default class extends BaseComponent {
   }
 
   _pushToRouteStack(routes, stack = []) {
-    const routeStack = stack.length > 0 ? [...stack] : [];
+    const routeStack = stack.length > 0 ? stack : [];
     if (Object.prototype.toString.call(routes) !== '[object Array]') {
       routes = [routes];
     }
@@ -123,7 +138,7 @@ export default class extends BaseComponent {
   }
 
   _popFromRouteStack(stack) {
-    const routeStack = [...stack];
+    const routeStack = stack;
     routeStack.pop();
     return routeStack;
   }

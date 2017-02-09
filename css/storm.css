@@ -178,3 +178,10 @@ sg-page .overlay_background {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+sg-navigation .nav-frame {
+  position: absolute;
+  width : 100%;
+  height: 100%;
+  z-index: 10;
+}

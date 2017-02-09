@@ -1,0 +1,32 @@
+
+@-webkit-keyframes enter-slide-right {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes enter-slide-right {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+.enter-slide-right {
+  pointer-events: none;
+  -webkit-animation:  enter-slide-right .2s ease forwards;
+          animation: enter-slide-right .2s ease forwards;
+}
+
+@-webkit-keyframes exit-slide-right {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes exit-slide-right {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+.exit-slide-right {
+  pointer-events: none;
+  -webkit-animation:  exit-slide-right .2s ease forwards;
+          animation: exit-slide-right .2s ease forwards;
+}
