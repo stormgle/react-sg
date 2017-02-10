@@ -74,8 +74,9 @@ export default class extends BaseComponent {
       <sg-navigation>
         {this.state.routeStack.map( stackEntry => {      
           const animation = stackEntry.animation || {};
+          const lock = stackEntry.lock ? 'lock' : '';
           return (
-            <div className = {`nav-frame`} style = {animation} key = {stackEntry._$key} >
+            <div className = {`nav-frame ${lock}`} style = {animation} key = {stackEntry._$key} >
               {this.props.renderRoute(stackEntry.route, this.navigator)}
             </div>
           );
@@ -99,6 +100,7 @@ export default class extends BaseComponent {
       }, _anim.duration + 50);
     }      
     const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
+    routeStack[routeStack.length-2].lock = true;
     this.setState({ routeStack });    
     return this.navigator;
   }
@@ -117,6 +119,7 @@ export default class extends BaseComponent {
       // actual pop out route from stack 
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
+        routeStack[routeStack.length-1].lock = false;
         this.setState({ routeStack });
       }, to);            
     }
@@ -130,7 +133,8 @@ export default class extends BaseComponent {
       this.setState({ routeStack });
     } else {      
       // reset to first route
-      const route = this.state.routeStack[0];
+      const route = this.state.routeStack[0];  
+      route.lock = false;    
       const routeStack = [route];
       this.setState({ routeStack }); 
     }
