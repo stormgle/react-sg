@@ -1,7 +1,7 @@
 "use strict"
 
 import log from './log'
-import { isNumber } from './util'
+import _ from './util'
 
 export function createAnimStyle({
   name = '', 
@@ -20,7 +20,7 @@ export function createAnimStyle({
     });
   }
 
-  if (!isNumber(duration) || duration < 0) {
+  if (!_.isNumber(duration) || duration < 0) {
     log.error({
       root : 'Navigator', 
       message : 'Invalid animation duration value',
@@ -30,8 +30,8 @@ export function createAnimStyle({
 
   // format options
   duration = `${duration/1000}s`; // convert from number of milliseconds to seconds
-  delay = isNumber(delay) && delay > 0 ? `${delay/1000}s` : '';
-  iteration = (isNumber(iteration) && iteration > 0) || iteration === 'infinite' ? iteration : '';
+  delay = _.isNumber(delay) && delay > 0 ? `${delay/1000}s` : '';
+  iteration = (_.isNumber(iteration) && iteration > 0) || iteration === 'infinite' ? iteration : '';
 
   const animation = `${name} ${duration} ${timing} ${delay} ${iteration} ${direction}`
     .trim().replace(/ +/g,' ');

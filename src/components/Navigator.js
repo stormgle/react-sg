@@ -4,8 +4,9 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
-import log from '../util/log'
-import { createAnimStyle } from '../util/animation'
+import _ from '../lib/util'
+import log from '../lib/log'
+import { createAnimStyle } from '../lib/animation'
 
 let uKey = 0;
 
@@ -129,24 +130,46 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
-  reset(routes) {
+  reset(routes, options = {}) {
+    let routeStack = [];
+    if (_.isObject(routes)) {
+      options = routes;
+      routes = null;
+    }
     if (routes) {
       // reset stack and initialize with new routes
-      const routeStack = this._pushToRouteStack(routes);
-      this.setState({ routeStack });
+      routeStack = this._pushToRouteStack(routes);
     } else {      
       // reset to first route
       const route = this.state.routeStack[0];  
       route.lock = false;    
-      const routeStack = [route];
-      this.setState({ routeStack }); 
+      routeStack = [route];      
     }
+    // apply animation if any
+    const anim = options.animation || this.props.animation || null;
+    const to = anim && anim !== 'none' ? anim.duration ? anim.duration + 50 : 300 : 0;
+    if (anim && anim !== 'none') {
+      const _anim = {...anim}; 
+      _anim.duration = _anim.duration || 250;
+      const route = this.state.routeStack[this.state.routeStack.length-1];
+      route.animation = createAnimStyle(_anim);
+      routeStack.push(route);
+      routeStack[routeStack.length-2].lock = true;
+      // popout top page after finish animation
+      const to = _anim.duration + 50;
+      setTimeout(() => {
+        const routeStack = this._popFromRouteStack(this.state.routeStack);
+        routeStack[routeStack.length-1].lock = false;
+        this.setState({ routeStack });
+      }, to); 
+    }
+    this.setState({ routeStack }); 
     return this.navigator;
   }
 
   _pushToRouteStack(routes, stack = [], options = {}) {
     const routeStack = stack.length > 0 ? stack : [];
-    if (Object.prototype.toString.call(routes) !== '[object Array]') {
+    if (!_.isArray(routes)) {
       routes = [routes];
     }
     routes.forEach(route => {
@@ -158,7 +181,9 @@ export default class extends BaseComponent {
 
   _popFromRouteStack(stack) {
     const routeStack = stack;
-    routeStack.pop();
+    if (routeStack.length > 1) {
+      routeStack.pop();
+    }    
     return routeStack;
   }
 
