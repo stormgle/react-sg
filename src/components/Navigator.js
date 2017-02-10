@@ -89,15 +89,17 @@ export default class extends BaseComponent {
     // add new route with animation
     const anim = options.animation || this.props.animation || null; 
     let animation = null;   
-    if (anim) { 
+    if (anim && anim !== 'none') { 
       const _anim = {...anim};   
       _anim.direction = 'reverse';
+      _anim.duration = _anim.duration || 250;
       animation = createAnimStyle(_anim);
       // clear animation after duration
+      const to = _anim.duration + 50;
       setTimeout(() => {
         routeStack[routeStack.length-1].animation = null;
         this.setState({ routeStack });
-      }, _anim.duration + 50);
+      }, to);
     }      
     const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
     routeStack[routeStack.length-2].lock = true;
@@ -105,13 +107,14 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
-  pop(route, options = {}) {
+  pop(options = {}) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
       const anim = options.animation || this.props.animation || null;
-      const to = anim && anim.duration ? anim.duration + 50 : 0;
-      if (anim) {
+      const to = anim && anim !== 'none' ? anim.duration ? anim.duration + 50 : 300 : 0;
+      if (anim && anim !== 'none') {
         const _anim = {...anim}; 
+        _anim.duration = _anim.duration || 250;
         const routeStack = this.state.routeStack;
         routeStack[routeStack.length-1].animation = createAnimStyle(_anim);
         this.setState({ routeStack });
