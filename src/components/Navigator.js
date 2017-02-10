@@ -130,20 +130,25 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
-  reset(routes, options = {}) {
+  reset(routes, options = {}) {     
     let routeStack = [];
-    if (_.isObject(routes)) {
+    if (_.isObject(routes) && routes.animation) {
       options = routes;
       routes = null;
     }
-    if (routes) {
+    if (routes) {     
       // reset stack and initialize with new routes
       routeStack = this._pushToRouteStack(routes);
     } else {      
+      /* if there is only one page in route stack and user reset to that page,
+         reset should take no action, animation should not apply */
+      if (this.state.routeStack.length === 1) {
+        return this.navigator;
+      }
       // reset to first route
       const route = this.state.routeStack[0];  
       route.lock = false;    
-      routeStack = [route];      
+      routeStack = [route];            
     }
     // apply animation if any
     const anim = options.animation || this.props.animation || null;
