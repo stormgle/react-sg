@@ -1,5 +1,6 @@
 "use strict"
 
+import log from './Log'
 import { isNumber } from './util'
 
 export function createAnimStyle({

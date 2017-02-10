@@ -84,39 +84,40 @@ export default class extends BaseComponent {
     );
   }
 
-  push(route) {
+  push(route, options = {}) {
     // add new route with animation
-    const animation = {
-      name : 'slide-top',
-      duration : 300,
-      direction : 'reverse'
-    }
-    route.animation = createAnimStyle(animation);  
+    const anim = options.animation || this.props.animation || null;    
+    if (anim) { 
+      const _anim = {...anim};   
+      _anim.direction = 'reverse';
+      route.animation = createAnimStyle(_anim);
+      // clear animation after duration
+      setTimeout(() => {
+        routeStack[routeStack.length-1].route.animation = null;
+        this.setState({ routeStack });
+      }, _anim.duration + 50);
+    }      
     const routeStack = this._pushToRouteStack(route, this.state.routeStack);
-    this.setState({ routeStack });
-    // clear animation 
-    setTimeout(() => {
-      routeStack[routeStack.length-1].route.animation = null;
-      this.setState({ routeStack });
-    }, animation.duration + 50);
+    this.setState({ routeStack });    
     return this.navigator;
   }
 
-  pop(route) {
+  pop(route, options = {}) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
-      const animation = {
-        name : 'slide-bottom',
-        duration : 200,
-      }
-      const _routeStack = this.state.routeStack;
-      _routeStack[_routeStack.length-1].route.animation = createAnimStyle(animation);
-      this.setState({ routeStack : _routeStack });
+      const anim = options.animation || this.props.animation || null;
+      const to = anim && anim.duration ? anim.duration + 50 : 0;
+      if (anim) {
+        const _anim = {...anim}; 
+        const _routeStack = this.state.routeStack;
+        _routeStack[_routeStack.length-1].route.animation = createAnimStyle(_anim);
+        this.setState({ routeStack : _routeStack });
+      }      
       // actual pop out route from stack 
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
         this.setState({ routeStack });
-      }, animation.duration + 50);            
+      }, to);            
     }
     return this.navigator;
   }
