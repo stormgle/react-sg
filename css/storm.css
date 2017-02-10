@@ -185,3 +185,7 @@ sg-navigation .nav-frame {
   height: 100%;
   z-index: 10;
 }
+
+sg-navigation .lock {
+  pointer-events: none;
+}

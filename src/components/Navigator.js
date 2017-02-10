@@ -4,7 +4,8 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
-import Log from '../util/Log'
+import log from '../util/Log'
+import { createAnimStyle } from '../util/animation'
 
 let uKey = 0;
 
@@ -51,7 +52,7 @@ export default class extends BaseComponent {
 
   componentWillMount() {
     if (!this.props.initialRoute && !this.props.initialRouteStack) {
-      Log.error({
+      log.error({
         root : 'Navigator', 
         message : 'Could not find an initial route',
         detail : 'At least initialRoute or initialRoutStack must be defined'
@@ -72,9 +73,9 @@ export default class extends BaseComponent {
     return (
       <sg-navigation>
         {this.state.routeStack.map( stackEntry => {
-          const animation = stackEntry.route.animation || '';
+          const animation = stackEntry.route.animation || {};
           return (
-            <div className = {`nav-frame ${animation}`} key = {stackEntry._$key} >
+            <div className = {`nav-frame`} style = {animation} key = {stackEntry._$key} >
               {this.props.renderRoute(stackEntry.route, this.navigator)}
             </div>
           );
@@ -85,28 +86,37 @@ export default class extends BaseComponent {
 
   push(route) {
     // add new route with animation
-    route.animation = 'enter-slide-right';
+    const animation = {
+      name : 'slide-top',
+      duration : 300,
+      direction : 'reverse'
+    }
+    route.animation = createAnimStyle(animation);  
     const routeStack = this._pushToRouteStack(route, this.state.routeStack);
     this.setState({ routeStack });
     // clear animation 
     setTimeout(() => {
       routeStack[routeStack.length-1].route.animation = null;
       this.setState({ routeStack });
-    }, 250);
+    }, animation.duration + 50);
     return this.navigator;
   }
 
   pop(route) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
+      const animation = {
+        name : 'slide-bottom',
+        duration : 200,
+      }
       const _routeStack = this.state.routeStack;
-      _routeStack[_routeStack.length-1].route.animation = 'exit-slide-right'
+      _routeStack[_routeStack.length-1].route.animation = createAnimStyle(animation);
       this.setState({ routeStack : _routeStack });
       // actual pop out route from stack 
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
         this.setState({ routeStack });
-      }, 250);            
+      }, animation.duration + 50);            
     }
     return this.navigator;
   }
