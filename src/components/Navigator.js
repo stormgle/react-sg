@@ -4,7 +4,7 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
-import log from '../util/Log'
+import log from '../util/log'
 import { createAnimStyle } from '../util/animation'
 
 let uKey = 0;
@@ -72,8 +72,8 @@ export default class extends BaseComponent {
   render() {
     return (
       <sg-navigation>
-        {this.state.routeStack.map( stackEntry => {
-          const animation = stackEntry.route.animation || {};
+        {this.state.routeStack.map( stackEntry => {      
+          const animation = stackEntry.animation || {};
           return (
             <div className = {`nav-frame`} style = {animation} key = {stackEntry._$key} >
               {this.props.renderRoute(stackEntry.route, this.navigator)}
@@ -86,18 +86,19 @@ export default class extends BaseComponent {
 
   push(route, options = {}) {
     // add new route with animation
-    const anim = options.animation || this.props.animation || null;    
+    const anim = options.animation || this.props.animation || null; 
+    let animation = null;   
     if (anim) { 
       const _anim = {...anim};   
       _anim.direction = 'reverse';
-      route.animation = createAnimStyle(_anim);
+      animation = createAnimStyle(_anim);
       // clear animation after duration
       setTimeout(() => {
-        routeStack[routeStack.length-1].route.animation = null;
+        routeStack[routeStack.length-1].animation = null;
         this.setState({ routeStack });
       }, _anim.duration + 50);
     }      
-    const routeStack = this._pushToRouteStack(route, this.state.routeStack);
+    const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
     this.setState({ routeStack });    
     return this.navigator;
   }
@@ -109,9 +110,9 @@ export default class extends BaseComponent {
       const to = anim && anim.duration ? anim.duration + 50 : 0;
       if (anim) {
         const _anim = {...anim}; 
-        const _routeStack = this.state.routeStack;
-        _routeStack[_routeStack.length-1].route.animation = createAnimStyle(_anim);
-        this.setState({ routeStack : _routeStack });
+        const routeStack = this.state.routeStack;
+        routeStack[routeStack.length-1].animation = createAnimStyle(_anim);
+        this.setState({ routeStack });
       }      
       // actual pop out route from stack 
       setTimeout(() => {
@@ -136,14 +137,14 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
-  _pushToRouteStack(routes, stack = []) {
+  _pushToRouteStack(routes, stack = [], options = {}) {
     const routeStack = stack.length > 0 ? stack : [];
     if (Object.prototype.toString.call(routes) !== '[object Array]') {
       routes = [routes];
     }
     routes.forEach(route => {
       uKey++;
-      routeStack.push({ _$key : uKey, route })
+      routeStack.push({ _$key : uKey, route, ...options })
     });
     return routeStack;
   }

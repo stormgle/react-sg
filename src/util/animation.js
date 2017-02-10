@@ -1,6 +1,6 @@
 "use strict"
 
-import log from './Log'
+import log from './log'
 import { isNumber } from './util'
 
 export function createAnimStyle({
@@ -37,7 +37,8 @@ export function createAnimStyle({
     .trim().replace(/ +/g,' ');
 
   return {
-    'WebkitAnimation': animation,
-    'animation': animation,
+    pointerEvents : 'none',
+    WebkitAnimation: animation,
+    animation: animation,
   };
 }
