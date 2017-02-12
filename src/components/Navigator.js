@@ -86,17 +86,22 @@ export default class extends BaseComponent {
     );
   }
 
+  /**
+   * @param {Any} route
+   * @param {Object} options
+   */
   push(route, options = {}) {
     // add new route with animation
-    const anim = options.animation || this.props.animation || null; 
+    const anim = options.animation || this.props.animation || 'none'; 
+    const animOptions = options.animateOptions || this.props.animateOptions || null;
     let animation = null;   
     if (anim && anim !== 'none') { 
-      const _anim = {...anim};   
-      _anim.direction = 'reverse';
-      _anim.duration = _anim.duration || 250;
-      animation = createAnimStyle(_anim);
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'reverse';
+      _animOptions.duration = _animOptions.duration || 250;
+      animation = createAnimStyle(anim, _animOptions);
       // clear animation after duration
-      const to = _anim.duration + 50;
+      const to = _animOptions.duration + 50;
       setTimeout(() => {
         routeStack[routeStack.length-1].animation = null;
         this.setState({ routeStack });
@@ -111,13 +116,15 @@ export default class extends BaseComponent {
   pop(options = {}) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
-      const anim = options.animation || this.props.animation || null;
-      const to = anim && anim !== 'none' ? anim.duration ? anim.duration + 50 : 300 : 0;
+      const anim = options.animation || this.props.animation || 'none';
+      const animOptions = options.animateOptions || this.props.animateOptions || null;
+      let to = 0;
       if (anim && anim !== 'none') {
-        const _anim = {...anim}; 
-        _anim.duration = _anim.duration || 250;
+        const _animOptions = {...animOptions}; 
+        _animOptions.duration = _animOptions.duration || 250;
         const routeStack = this.state.routeStack;
-        routeStack[routeStack.length-1].animation = createAnimStyle(_anim);
+        routeStack[routeStack.length-1].animation = createAnimStyle(anim, _animOptions);
+        to = _animOptions.duration + 50;
         this.setState({ routeStack });
       }      
       // actual pop out route from stack 
@@ -130,13 +137,17 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
+  /**
+   * @param {Array} routes
+   * @param {Object} options
+   */
   reset(routes, options = {}) {     
     let routeStack = [];
-    if (_.isObject(routes) && routes.animation) {
+    if (routes && _.isObject(routes) && (routes.animation || routes.animateOptions)) {
       options = routes;
       routes = null;
     }
-    if (routes) {     
+    if (routes && _.isArray(routes)) {     
       // reset stack and initialize with new routes
       routeStack = this._pushToRouteStack(routes);
     } else {      
@@ -151,17 +162,17 @@ export default class extends BaseComponent {
       routeStack = [route];            
     }
     // apply animation if any
-    const anim = options.animation || this.props.animation || null;
-    const to = anim && anim !== 'none' ? anim.duration ? anim.duration + 50 : 300 : 0;
+    const anim = options.animation || this.props.animation || 'none';
+    const animOptions = options.animateOptions || this.props.animateOptions || null;
     if (anim && anim !== 'none') {
-      const _anim = {...anim}; 
-      _anim.duration = _anim.duration || 250;
+      const _animOptions = {...animOptions}; 
+      _animOptions.duration = _animOptions.duration || 250;
       const route = this.state.routeStack[this.state.routeStack.length-1];
-      route.animation = createAnimStyle(_anim);
+      route.animation = createAnimStyle(anim, _animOptions);
       routeStack.push(route);
       routeStack[routeStack.length-2].lock = true;
       // popout top page after finish animation
-      const to = _anim.duration + 50;
+      const to = _animOptions.duration + 50;
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
         routeStack[routeStack.length-1].lock = false;
