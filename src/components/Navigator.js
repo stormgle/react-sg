@@ -93,7 +93,7 @@ export default class extends BaseComponent {
   push(route, options = {}) {
     // add new route with animation
     const anim = options.animation || this.props.animation || 'none'; 
-    const animOptions = options.animateOptions || this.props.animateOptions || null;
+    const animOptions = options.animationOptions || this.props.animationOptions || null;
     let animation = null;   
     if (anim && anim !== 'none') { 
       const _animOptions = {...animOptions};   
@@ -117,7 +117,7 @@ export default class extends BaseComponent {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
       const anim = options.animation || this.props.animation || 'none';
-      const animOptions = options.animateOptions || this.props.animateOptions || null;
+      const animOptions = options.animationOptions || this.props.animationOptions || null;
       let to = 0;
       if (anim && anim !== 'none') {
         const _animOptions = {...animOptions}; 
@@ -143,7 +143,7 @@ export default class extends BaseComponent {
    */
   reset(routes, options = {}) {     
     let routeStack = [];
-    if (routes && _.isObject(routes) && (routes.animation || routes.animateOptions)) {
+    if (routes && _.isObject(routes) && (routes.animation || routes.animationOptions)) {
       options = routes;
       routes = null;
     }
@@ -163,7 +163,7 @@ export default class extends BaseComponent {
     }
     // apply animation if any
     const anim = options.animation || this.props.animation || 'none';
-    const animOptions = options.animateOptions || this.props.animateOptions || null;
+    const animOptions = options.animationOptions || this.props.animationOptions || null;
     if (anim && anim !== 'none') {
       const _animOptions = {...animOptions}; 
       _animOptions.duration = _animOptions.duration || 250;
