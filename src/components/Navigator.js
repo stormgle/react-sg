@@ -38,7 +38,9 @@ export default class extends BaseComponent {
     this.navigator = { 
       push : this.push.bind(this) ,
       pop : this.pop.bind(this),
-      reset : this.reset.bind(this)
+      reset : this.reset.bind(this),
+      getCurrentRoute : this.getCurrentRoute.bind(this),
+      getRouteStack : this.getRouteStack.bind(this)
     };
 
     this.state = {
@@ -47,7 +49,8 @@ export default class extends BaseComponent {
 
     this.bind(
       '_getInitialRoutesFromProps',
-      '_pushToRouteStack', '_popFromRouteStack', 'push', 'pop', 'reset'
+      '_pushToRouteStack', '_popFromRouteStack', '_push', '_pop', 'reset',
+      'getCurrentRoute', 'getRouteStack'
     );
 
   }
@@ -87,33 +90,66 @@ export default class extends BaseComponent {
    * @param {Object} options
    */
   push(route, options = {}) {
+    const onPrePush = options.onPrePush || this.props.onPrePush || undefined;
+    const onPostPush = options.onPostPush || this.props.onPostPush || undefined;
+    if (onPrePush) { 
+      const route = this.getCurrentRoute();
+      onPrePush(route);
+    }    
+    return this._push(route, options, onPostPush);
+  }
+
+  /**
+   * @param {Object} options
+   */
+  pop(options = {}) {    
+    const onPrePop= options.onPrePop || this.props.onPrePop || undefined;
+    const onPostPop = options.onPostPop || this.props.onPostPop || undefined;
+    if (onPrePop) { 
+      const route = this.getCurrentRoute();
+      onPrePop(route);
+    }
+    return this._pop(options, onPostPop);
+  }
+
+  getCurrentRoute() {
+    return {...this.state.routeStack[this.state.routeStack.length-1].route};
+  }
+
+  getRouteStack() {
+    const stack = [];
+    this.state.routeStack.forEach(entry => {
+      stack.push({...entry.route});
+    });
+    return stack;
+  }
+  
+  _push(route, options = {}, onFinish) {
     // add new route with animation
     const anim = options.animation || this.props.animation || 'none'; 
     const animOptions = options.animationOptions || this.props.animationOptions || null;
     let animation = null;   
+    let to = 0;
     if (anim && anim !== 'none') { 
       const _animOptions = {...animOptions};   
       _animOptions.direction = 'reverse';
       _animOptions.duration = _animOptions.duration || 250;
-      animation = createAnimStyle(anim, _animOptions);
-      // clear animation after duration
-      const to = _animOptions.duration + 50;
-      setTimeout(() => {
-        routeStack[routeStack.length-1].animation = null;
-        this.setState({ routeStack });
-      }, to);
+      animation = createAnimStyle(anim, _animOptions);      
+      to = _animOptions.duration + 50;      
     }      
     const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
     routeStack[routeStack.length-2].lock = true;
     this.setState({ routeStack });    
+    // clear animation after duration
+    setTimeout(() => {
+      routeStack[routeStack.length-1].animation = null;
+      this.setState({ routeStack });
+      onFinish();
+    }, to);
     return this.navigator;
   }
 
-  /**
-   * @param {Any} route
-   * @param {Object} options (multiple, animation, animationOptions)
-   */
-  pop(options = {}) {
+  _pop(options = {}, onFinish) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
       const anim = options.animation || this.props.animation || 'none';
@@ -132,7 +168,10 @@ export default class extends BaseComponent {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
         routeStack[routeStack.length-1].lock = false;
         this.setState({ routeStack });
+        onFinish();
       }, to);            
+    } else {
+      onFinish(); // no page to pop, just finish callback
     }
     return this.navigator;
   }
