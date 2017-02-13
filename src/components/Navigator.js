@@ -46,6 +46,7 @@ export default class extends BaseComponent {
     };
 
     this.bind(
+      '_getInitialRoutesFromProps',
       '_pushToRouteStack', '_popFromRouteStack', 'push', 'pop', 'reset'
     );
 
@@ -60,15 +61,10 @@ export default class extends BaseComponent {
       });
     }
 
-    let routeStack = [];
-    if (this.props.initialRouteStack) {
-      routeStack = this._pushToRouteStack(this.props.initialRouteStack);      
-    }
-    if (this.props.initialRoute) {
-      routeStack = this._pushToRouteStack(this.props.initialRoute, routeStack);      
-    }    
+    const routeStack = this._getInitialRoutesFromProps();
+
     this.setState({ routeStack });
-  }
+  }  
 
   render() {
     return (
@@ -113,6 +109,10 @@ export default class extends BaseComponent {
     return this.navigator;
   }
 
+  /**
+   * @param {Any} route
+   * @param {Object} options (multiple, animation, animationOptions)
+   */
   pop(options = {}) {
     if (this.state.routeStack.length > 1) {
       // add animation for page pop out of screen
@@ -190,8 +190,11 @@ export default class extends BaseComponent {
     }
     routes.forEach(route => {
       uKey++;
-      routeStack.push({ _$key : uKey, route, ...options })
+      routeStack.push({ _$key : uKey, lock : true, route, ...options })
     });
+    if (routeStack.length > 0) {
+      routeStack[routeStack.length-1].lock = false;
+    }    
     return routeStack;
   }
 
@@ -200,6 +203,17 @@ export default class extends BaseComponent {
     if (routeStack.length > 1) {
       routeStack.pop();
     }    
+    return routeStack;
+  }
+
+  _getInitialRoutesFromProps() {
+    let routeStack = [];
+    if (this.props.initialRouteStack) {
+      routeStack = this._pushToRouteStack(this.props.initialRouteStack);      
+    }
+    if (this.props.initialRoute) {
+      routeStack = this._pushToRouteStack(this.props.initialRoute, routeStack);      
+    } 
     return routeStack;
   }
 
