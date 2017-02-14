@@ -1,7 +1,7 @@
 {
   "name": "react-storm-ui",
   "version": "1.0.0",
-  "description": "React components for Stormgle's storm-ui",
+  "description": "React components for Stormgle UI project",
   "main": "index.js",
   "scripts": {
     "build" : "babel src -d dist",
@@ -9,19 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stormgle/react-storm-ui.git"
+    "url": "git+https://github.com/stormgle/react-sg.git"
   },
   "keywords": [
     "react",
     "stormgle",
-    "storm-ui"
+    "ui", "ux"
   ],
   "author": "duongtdn",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stormgle/react-storm-ui/issues"
+    "url": "https://github.com/stormgle/react-sg/issues"
   },
-  "homepage": "https://github.com/stormgle/react-storm-ui#readme",
+  "homepage": "https://github.com/stormgle/react-sg#readme",
 	"peerDependencies" : {		
 		"react": "^15.4.0",
     "react-dom": "^15.4.0"
