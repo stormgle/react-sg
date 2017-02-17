@@ -179,6 +179,8 @@ sg-page .overlay_background {
   box-sizing: border-box;
 }
 
+/* sg-navigation */
+
 sg-navigation .nav-frame {
   position: absolute;
   width : 100%;
@@ -188,4 +190,45 @@ sg-navigation .nav-frame {
 
 sg-navigation .lock {
   pointer-events: none;
+}
+
+/* sg-splitter */
+
+sg-splitter {
+  display: block;
+}
+
+sg-splitter .splitter {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+sg-splitter .masking {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width : 100%;
+  height: 100%;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, .2);
+}
+
+sg-splitter sg-splitter-side {
+  position: absolute;
+  width : 150px;
+  height: 100%;
+  border-right : 1px solid grey; 
+  background-color: white;
+  z-index: 500;
+}
+
+sg-splitter sg-splitter-content {
+  position: absolute;
+  width : 100%;
+  height: 100%;
+  background-color: #f9f9f9;
+  z-index: 100;
 }
