@@ -4,9 +4,9 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
-import _ from '../lib/util'
-import log from '../lib/log'
-import { createAnimStyle } from '../lib/animation'
+import util from './lib/util'
+import log from './lib/log'
+import { createAnimStyle } from './lib/animation'
 
 let uKey = 0;
 
@@ -182,11 +182,11 @@ export default class extends BaseComponent {
    */
   reset(routes, options = {}) {     
     let routeStack = [];
-    if (routes && _.isObject(routes) && (routes.animation || routes.animationOptions)) {
+    if (routes && util.isObject(routes) && (routes.animation || routes.animationOptions)) {
       options = routes;
       routes = null;
     }
-    if (routes && _.isArray(routes)) {     
+    if (routes && util.isArray(routes)) {     
       // reset stack and initialize with new routes
       routeStack = this._pushToRouteStack(routes);
     } else {      
@@ -224,7 +224,7 @@ export default class extends BaseComponent {
 
   _pushToRouteStack(routes, stack = [], options = {}) {
     const routeStack = stack.length > 0 ? stack : [];
-    if (!_.isArray(routes)) {
+    if (!util.isArray(routes)) {
       routes = [routes];
     }
     routes.forEach(route => {
