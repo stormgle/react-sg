@@ -5,6 +5,8 @@ import React from 'react'
 import BaseComponent from './BaseComponent'
 
 import { createAnimStyle } from './lib/animation'
+import util from './lib/util'
+import log from './lib/log'
 
 /**
  * SplitterSide component
@@ -15,6 +17,7 @@ class SplitterSide extends BaseComponent {
   /**
    * Render a Splitter Side insile the Splitter   
    * @param {String} side - position Left or Right
+   * @param {Number/String} width - width of Splitter side, can be number or string (in percentage)  
    * @param {Boolean} isOpen - true to show the component
    * @param {Boolean} shouldLockContent - lock the splitter content by a mask
    * @param {String} maskColor - color of the mask (not implement yet)
@@ -32,7 +35,7 @@ class SplitterSide extends BaseComponent {
 
     this.instance = null;
 
-    this.bind('_getInstance');
+    this.bind('_getInstance', '_getAndFormatWidth');
 
   }
 
@@ -63,15 +66,16 @@ class SplitterSide extends BaseComponent {
   }
 
   render() {
+    const width = this._getAndFormatWidth();
     const isOpen = this.props.isOpen || false;
     const side = this.props.side || 'left';
     const position = side === 'right' ?
           isOpen || this.state.animation ? {right: 0} : {right: `-${this.state.width}px`}:
           isOpen || this.state.animation ? {left: 0}  : {left: `-${this.state.width}px`};                   
-    const style = {...this.state.animation, ...position};  
+    const style = {...this.state.animation, ...position, ...width};  
     return (
       <sg-splitter-side >
-        <div ref = {this._getInstance} style = {style}>
+        <div ref = {this._getInstance} style = {style} >
           {this.props.children}
         </div>        
       </sg-splitter-side>
@@ -80,6 +84,28 @@ class SplitterSide extends BaseComponent {
 
   _getInstance(el) {
     this.instance = el;
+  }
+
+  _getAndFormatWidth() {
+    if (!this.props.width) {
+      return null;
+    }
+  
+    if (util.isNumber(this.props.width)) {
+      return { width : `${this.props.width}px`};
+    }
+
+    const width = this.props.width.trim();
+    if (/(^\d+px$|^\d+%$)/i.test(width)) {
+      return {width}; 
+    } else {
+      log.warn({
+        root : 'SpliterSide', 
+        message : 'Invalid value of width',
+        detail : 'Width should be a number or a string ended with px or %'
+      });
+      return null;
+    }   
   }
 
 }

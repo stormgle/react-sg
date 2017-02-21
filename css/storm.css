@@ -218,7 +218,6 @@ sg-splitter .masking {
 
 sg-splitter-side > div {
   position: absolute;
-  width : 150px;
   height: 100%;
   border-right : 1px solid grey; 
   background-color: white;
