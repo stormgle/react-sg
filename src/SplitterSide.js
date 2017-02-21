@@ -4,6 +4,8 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 
+import { createAnimStyle } from './lib/animation'
+
 /**
  * SplitterSide component
  * @extends BaseComponent 
@@ -23,12 +25,14 @@ class SplitterSide extends BaseComponent {
     super(props);
 
     this.state = {
-      width : 0
+      width : 0,
+      animation : null,
+      isOpen : false
     };
 
     this.instance = null;
 
-    this.bind('_getInstance')
+    this.bind('_getInstance');
 
   }
 
@@ -36,16 +40,40 @@ class SplitterSide extends BaseComponent {
     this.setState({width : this.instance.clientWidth + 1});
   }
 
+  
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isOpen !== this.state.isOpen) {
+      let animation = null;   
+      let to = 0;
+      let anim = nextProps.animation || 'none';
+      const animOptions = nextProps.animationOptions || null;
+      if (anim && anim !== 'none') { 
+        anim = `${anim}-${nextProps.side === 'right'? 'right' : 'left'}`;
+        const _animOptions = {...animOptions};   
+        _animOptions.direction = nextProps.isOpen ? 'reverse' : 'forwards';
+        _animOptions.duration = _animOptions.duration || 250;
+        animation = createAnimStyle(anim, _animOptions);      
+        to = _animOptions.duration + 50;   
+        this.setState({ animation, isOpen : nextProps.isOpen });
+      }
+      setTimeout(() => {
+        this.setState({ animation : null });
+      }, to);  
+    }
+  }
+
   render() {
     const isOpen = this.props.isOpen || false;
     const side = this.props.side || 'left';
-    const style = side === 'left' ?
-                   isOpen ? {left: 0}  : {left: `-${this.state.width}px`} :
-                   isOpen ? {right: 0} : {right: `-${this.state.width}px`};
-
+    const position = side === 'right' ?
+          isOpen || this.state.animation ? {right: 0} : {right: `-${this.state.width}px`}:
+          isOpen || this.state.animation ? {left: 0}  : {left: `-${this.state.width}px`};                   
+    const style = {...this.state.animation, ...position};  
     return (
-      <sg-splitter-side ref = {this._getInstance} style = {style}>
-        {this.props.children}        
+      <sg-splitter-side >
+        <div ref = {this._getInstance} style = {style}>
+          {this.props.children}
+        </div>        
       </sg-splitter-side>
     );
   }

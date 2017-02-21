@@ -216,7 +216,7 @@ sg-splitter .masking {
   background-color: rgba(0, 0, 0, .2);
 }
 
-sg-splitter sg-splitter-side {
+sg-splitter-side > div {
   position: absolute;
   width : 150px;
   height: 100%;
