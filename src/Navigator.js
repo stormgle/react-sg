@@ -14,7 +14,7 @@ let uKey = 0;
  * Navigator component
  * @extends BaseComponent 
  * */
-export default class extends BaseComponent {
+class Navigator extends BaseComponent {
   /**
    * Navigator component that render Page for each Route
    * @param {Array} initialRouteStack - Array contains the initial routes from the Navigator
@@ -257,3 +257,6 @@ export default class extends BaseComponent {
   }
 
 }
+
+Navigator.sgType = 'navigator';
+export default Navigator;
