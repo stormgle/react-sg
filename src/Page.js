@@ -8,11 +8,11 @@ import BaseComponent from './BaseComponent'
  * Page component
  * @extends BaseComponent 
  * */
-export default class extends BaseComponent {
+class Page extends BaseComponent {
   /**
    * Render a Page component
    * It renders 6 layers, the order when active is as following
-   *  1 - background layer
+   *  1 - Background layer
    *  2 - Contend layer
    *  3 - Header and Footer layer
    *  4 - Fixed layer
@@ -24,7 +24,7 @@ export default class extends BaseComponent {
    * @param {Function} renderFooter - renderFooter of Page
    * @param {Function} renderFixed - render a fixed component on Page
    * @param {Function} renderModal - render a model cover entire of Page
-   * @param {Function} onInit - function will be invoked after Page is mounted
+   * @param {Function} onInit - function will be invoked before Page is mounted
    * @param {Function} onShow - function will be invoked after page has been shown ??
    * @param {Function} onHide - function will be invoked after page has been hide ??
    */
@@ -162,3 +162,6 @@ export default class extends BaseComponent {
   }
 
 }
+
+Page.sgType = 'page';
+export default Page;
