@@ -14,7 +14,7 @@ class Splitter extends BaseComponent {
     // get status of splitter side
     let isSideOpen = false;
     let lockContent = false;
-    this.props.children.forEach(child => {
+    React.Children.forEach(this.props.children, child => {
       if (child.type && child.type.sgType === 'splitter-side') {
         isSideOpen = child.props.isOpen || false;
         lockContent = child.props.shouldLockContent || false;
