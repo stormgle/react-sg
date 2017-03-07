@@ -3,6 +3,7 @@
 import React from 'react'
 
 import BaseComponent from './BaseComponent'
+import util from './lib/util'
 
 /**
  * Page component
@@ -126,12 +127,37 @@ class Page extends BaseComponent {
 
   render() {
     const style = 'w3';
+
     const header = this.props.renderHeader ? this.props.renderHeader(this.page) : null;
     const footer = this.props.renderFooter ? this.props.renderFooter(this.page) : null;
     const fixed  = this.props.renderFixed ? this.props.renderFixed(this.page) : null;
     const modal  = this.props.renderModal ? this.props.renderModal(this.page) : null;
+    
     const pageStyle = this.props.style || {};
     const pageClass = this.props.className || ''; 
+
+    /* shallow passing page object to all sg-page-child component
+       I'd like' to test the performance loss due to this 
+    */
+    const shallowCloneElement = element => {
+      let children = [];
+      if (util.isString(element)) {
+        return element;
+      }
+
+      if (element.props.children ) { 
+         children = React.Children.map(element.props.children, child => shallowCloneElement(child));  
+      }    
+
+      if (element.type && element.type.sgPageChild) {    
+        return React.cloneElement(element, {page : this.page}, children);
+      } else {
+        return React.cloneElement(element, {}, children);;
+      }
+      
+    }
+    const children = React.Children.map(this.props.children, child => shallowCloneElement(child));
+    
     return(
       <sg-page > 
         <div className = 'page' >
@@ -147,7 +173,7 @@ class Page extends BaseComponent {
             {header} 
           </div>
           <div className = {`page_content ${style}-container ${pageClass}`} style = {{paddingTop : `${this.state.contentPadTop}px`, ...pageStyle}} >
-            {this.props.children}
+            {children}
           </div>
           <div className = {`page_footer ${style}-container ${this.state.hideFooter ? 'hide' : ''}`}> 
             {footer} 
