@@ -2,3 +2,5 @@ src/
 node_modules/
 .babelrc
 npm-debug.log
+demo/
+webpack.config.js

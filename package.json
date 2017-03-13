@@ -4,8 +4,9 @@
   "description": "React components for Stormgle UI project",
   "main": "index.js",
   "scripts": {
-    "build" : "babel src -d dist",
-		"prepublish": "npm run build"
+    "build": "babel src -d dist",
+    "prepublish": "npm run build",
+    "demo": "npm run build && babel demo/src -d demo/lib && webpack && node demo/server"
   },
   "repository": {
     "type": "git",
@@ -14,7 +15,8 @@
   "keywords": [
     "react",
     "stormgle",
-    "ui", "ux"
+    "ui",
+    "ux"
   ],
   "author": "duongtdn",
   "license": "MIT",
@@ -22,14 +24,18 @@
     "url": "https://github.com/stormgle/react-sg/issues"
   },
   "homepage": "https://github.com/stormgle/react-sg#readme",
-	"peerDependencies" : {		
-		"react": "^15.4.0",
+  "peerDependencies": {
+    "react": "^15.4.0",
     "react-dom": "^15.4.0"
-	},
-	"devDependencies": {
+  },
+  "devDependencies": {
     "babel-cli": "^6.11.4",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-react": "^6.11.1",
-    "babel-plugin-transform-object-rest-spread": "^6.16.0"
+    "css-loader": "^0.27.1",
+    "express": "^4.15.2",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "webpack": "^2.2.1"
   }
 }

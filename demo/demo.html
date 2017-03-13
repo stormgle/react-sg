@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Storm Demo</title>        
+ 
+		<script>
+			
+			console.log('Load Script')
+			
+			function changeSize(size) {
+				var el = document.getElementById('mb-frame');
+				el.style.width = size.width;
+				el.style.height = size.height;
+			}
+			
+			function size320x460() {
+				changeSize({width: '320px', height: '460px'});
+			}
+			
+			function size360x640() {
+				changeSize({width: '360px', height: '640px'});
+			}
+			
+		</script>	
+ 
+  </head>
+  
+  <body >
+    
+		<div style = 'margin-bottom : 12px'>
+			<button onclick = 'size320x460()'> 320 x 460 </button>
+			<button onclick = 'size360x640()'> 360 x 640 </button>
+		</div>
+		
+    <iframe  id = 'mb-frame' width = 320 height = 460 src = 'http://localhost:8080' />
+		
+
+    
+  </body>
+</html>
