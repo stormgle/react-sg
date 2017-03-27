@@ -3,12 +3,27 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
+import '../../css/w3.css'
+import '../../css/storm.css'
+import '../../css/animation.css'
+
 import Page from '../../dist/Page'
 import Navigator from '../../dist/Navigator'
+
+const colors = [
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+	'#147006','#ddaec4','#6eec96','#36648b','#468499','#007272','#adb6f9','#576e63','#800080',
+];
 
 class Demo extends Component {
 	
 	renderRoute(route, nav) {
+		console.log('render route')
 		function nextPage() {
 			if (route.id === 1) {
 				nav.push({ id: 2, name : 'PAGE 2'}, {animation : 'slide-bottom', onPrePush : route => console.log('SPECIAL PUSH')});
@@ -47,9 +62,9 @@ class Demo extends Component {
 				<button onClick = {resetStack}> Reset </button>
 				
 				<div>
-					<div> <input type = 'checkbox' /> A </div>
-					<div> <input type = 'checkbox' /> B </div>
-					<div> <input type = 'checkbox' /> C </div>
+					<div> <input type = 'checkbox' />  A </div>
+					<div> <input type = 'checkbox' />  B </div>
+					<div> <input type = 'checkbox' />  C </div>
 				</div>
 				
 				<div>
@@ -64,7 +79,7 @@ class Demo extends Component {
 	}
 	
 	render() {
-		console.log('# Strom-ui Test Program');
+		console.log('# Storm-ui Test Program');
 		return (
 			<Navigator	
 				initialRouteStack = {[ {id :0, name : 'PAGE 0'}, {id :1, name : 'PAGE 1'} ]}

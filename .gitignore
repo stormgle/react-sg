@@ -3,5 +3,4 @@ node_modules/
 npm-debug.log
 debug.log
 demo/lib
-demo/bundle.js
-demo/bundle.css
+demo/web/build

@@ -3,6 +3,10 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
+import '../../css/w3.css'
+import '../../css/storm.css'
+import '../../css/animation.css'
+
 import Page from '../../dist/Page'
 
 let i = 0;

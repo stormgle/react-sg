@@ -14,7 +14,7 @@ module.exports = {
 
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'demo')
+    path: path.resolve(__dirname, 'demo', 'web', 'build')
   },
 
   module: {
