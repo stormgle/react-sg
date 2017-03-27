@@ -139,7 +139,7 @@ class Page extends BaseComponent {
     /* shallow passing page object to all sg-page-child component
        I'd like' to test the performance loss due to this 
     */
-    const shallowCloneElement = element => {
+    const shallowCloneElement = element => { 
       let children = [];
       if (util.isString(element)) {
         return element;
@@ -149,15 +149,19 @@ class Page extends BaseComponent {
          children = React.Children.map(element.props.children, child => shallowCloneElement(child));  
       }    
 
-      if (element.type && element.type.sgPageChild) {    
+      if (element.type && element.type.sgPageChild) {          
         return React.cloneElement(element, {page : this.page}, children);
       } else {
-        return React.cloneElement(element, {}, children);;
+        if (children.length > 0) {
+          return React.cloneElement(element, {}, children);
+        } else {
+          return React.cloneElement(element);;
+        }
+        
       }
       
     }
     const children = React.Children.map(this.props.children, child => shallowCloneElement(child));
-    
     return(
       <sg-page > 
         <div className = 'page' >
