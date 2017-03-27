@@ -6,10 +6,11 @@ module.exports = {
   
   entry: {
 		/* built library */
-		lib : './dist/exporter.js',
+		lib: './dist/exporter.js',
 		/* demo pages */
-		page : './demo/lib/page.js',
-		navigator : './demo/lib/navigator.js',
+		page: './demo/lib/page.js',
+		navigator: './demo/lib/navigator.js',
+		splitter: './demo/lib/splitter.js'
 	}, 
 
   output: {
