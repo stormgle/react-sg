@@ -10,6 +10,8 @@
 			
 			console.log('Load Script')
 			
+			var SERVER = 'http://localhost:8080/';
+
 			function changeSize(size) {
 				var el = document.getElementById('mb-frame');
 				el.style.width = size.width;
@@ -23,7 +25,11 @@
 			function size360x640() {
 				changeSize({width: '360px', height: '640px'});
 			}
-			
+
+			function selectDemo(demo) {
+				document.getElementById('mb-frame').src = SERVER + demo;
+			}
+		
 		</script>	
  
   </head>
@@ -33,6 +39,11 @@
 		<div style = 'margin-bottom : 12px'>
 			<button onclick = 'size320x460()'> 320 x 460 </button>
 			<button onclick = 'size360x640()'> 360 x 640 </button>
+		</div>
+
+		<div style = 'margin-bottom : 12px'>
+			<button onclick = "selectDemo('page')"> Page </button>
+			<button onclick = "selectDemo('navigator')"> Navigator </button>
 		</div>
 		
     <iframe  id = 'mb-frame' width = 320 height = 460 src = 'http://localhost:8080' />

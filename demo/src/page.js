@@ -1,11 +1,12 @@
 "use strict"
 
 import React, { Component } from 'react'
+import { render } from 'react-dom'
 
 import Page from '../../dist/Page'
 
 let i = 0;
-export default class extends Component {
+class Demo extends Component {
 	constructor(props) {
 		super(props);
 
@@ -106,3 +107,16 @@ export default class extends Component {
 	}
 
 }
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <Demo />
+    );    
+  }
+}
+
+render( <App />, document.getElementById('root'));
