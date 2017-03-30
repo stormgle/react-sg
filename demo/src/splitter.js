@@ -17,7 +17,10 @@ class Demo extends Component {
 	constructor(props) {
 		super(props);
 		
-		this.state = { isOpenMenu : false };
+		this.state = { 
+			isOpenMenu : false, 
+			collapse : false
+		};
 		
 	}
 	
@@ -26,7 +29,7 @@ class Demo extends Component {
 
 				<Splitter>
 					<SplitterSide 
-
+						collapse = {this.state.collapse}
 						side = 'right'
 						isOpen = {this.state.isOpenMenu}
 						shouldLockContent = {true}
@@ -40,6 +43,9 @@ class Demo extends Component {
 						<Page>
 							<div> Content </div>
 							<button onClick = {this.toggleMenu.bind(this)} style = {{right : 0, position: 'absolute'}} > Menu </button>
+							<div>
+								<button onClick = {this.toggleCollapse.bind(this)}> {this.state.collapse ? 'Collapse: true':'Collapse: false'} </button>
+							</div>
 						</Page>
 					</SplitterContent>
 				</Splitter>
@@ -49,6 +55,10 @@ class Demo extends Component {
 	
 	toggleMenu() {
 		this.setState({ isOpenMenu : !this.state.isOpenMenu });
+	}
+
+	toggleCollapse() {
+		this.setState({ collapse : !this.state.collapse });
 	}
 	
 	closeMenu() {
