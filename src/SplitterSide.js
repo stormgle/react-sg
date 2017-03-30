@@ -18,7 +18,7 @@ class SplitterSide extends BaseComponent {
    * Render a Splitter Side insile the Splitter   
    * @param {String} side - position Left or Right
    * @param {Number|String} width - width of Splitter side, can be number or string (in percentage)
-   * @param {Boolean|MeadiaQuery} collapse - specify collapse behavior (not implemented yet)   
+   * @param {Boolean} collapse - specify collapse behavior   
    * @param {Boolean} isOpen - true to show the component
    * @param {Boolean} shouldLockContent - lock the splitter content by a mask
    * @param {String} maskColor - color of the mask (not implement yet)
