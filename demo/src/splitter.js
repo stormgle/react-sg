@@ -18,8 +18,10 @@ class Demo extends Component {
 		super(props);
 		
 		this.state = { 
+			side : 'left',
 			isOpenMenu : false, 
-			collapse : false
+			collapse : false,
+			lockContent : false,
 		};
 		
 	}
@@ -30,9 +32,9 @@ class Demo extends Component {
 				<Splitter>
 					<SplitterSide 
 						collapse = {this.state.collapse}
-						side = 'right'
+						side = {this.state.side}
 						isOpen = {this.state.isOpenMenu}
-						shouldLockContent = {true}
+						shouldLockContent = {this.state.lockContent}
 						animation	= 'slide'
 						>
 						<h3> HEADING 3 </h3>
@@ -42,15 +44,24 @@ class Demo extends Component {
 					<SplitterContent>
 						<Page>
 							<div> Content </div>
-							<button onClick = {this.toggleMenu.bind(this)} style = {{right : 0, position: 'absolute'}} > Menu </button>
 							<div>
+								<button onClick = {this.toggleMenu.bind(this)} style = {{right : 0, position: 'absolute'}} > Menu </button>
+							</div>
+							<div>
+								<button onClick = {this.switchSide.bind(this)}> {this.state.side === 'left' ? 'Left':'Right'} </button>
 								<button onClick = {this.toggleCollapse.bind(this)}> {this.state.collapse ? 'Collapse: true':'Collapse: false'} </button>
+								<button onClick = {this.toggleLockContent.bind(this)}> {this.state.lockContent ? 'Lock: true':'Lock: false'} </button>
 							</div>
 						</Page>
 					</SplitterContent>
 				</Splitter>
 
 		);
+	}
+
+	switchSide() {
+		const side = this.state.side === 'left' ? 'right' : 'left';
+		this.setState({ side });
 	}
 	
 	toggleMenu() {
@@ -59,6 +70,10 @@ class Demo extends Component {
 
 	toggleCollapse() {
 		this.setState({ collapse : !this.state.collapse });
+	}
+
+	toggleLockContent() {
+		this.setState({ lockContent : !this.state.lockContent });
 	}
 	
 	closeMenu() {
