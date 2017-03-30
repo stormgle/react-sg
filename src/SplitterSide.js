@@ -50,7 +50,7 @@ class SplitterSide extends BaseComponent {
 
   
   componentWillReceiveProps(nextProps) {
-    if (nextProps.isOpen !== this.state.isOpen) {
+    if (!this.props.collapse && (nextProps.isOpen !== this.state.isOpen)) {
       let animation = null;   
       let to = 0;
       let anim = nextProps.animation || 'none';
