@@ -63,8 +63,17 @@ class Page extends BaseComponent {
     }
   }
 
-  componentDidMount() {
+  componentDidMount() {    
     this.setState({ contentPadTop : this.headerElement.clientHeight + 10 });
+    if (this.props.onShow) {
+      this.props.onShow(this.page);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
   }
 
   parseModifier() {
