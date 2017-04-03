@@ -10,9 +10,9 @@ import BaseComponent from './BaseComponent'
  * */
 class SplitterContent extends BaseComponent {
 
-  render() {
+  render() {  
     return (
-      <sg-splitter-content>
+      <sg-splitter-content style = {{...this.props.style}}>
         {this.props.children}
       </sg-splitter-content>
     );
