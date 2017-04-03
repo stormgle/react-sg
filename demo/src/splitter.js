@@ -20,7 +20,7 @@ class Demo extends Component {
 		this.state = { 
 			side : 'left',
 			isOpenMenu : false, 
-			collapse : false,
+			collapse : true,
 			lockContent : false,
 		};
 		
@@ -31,6 +31,7 @@ class Demo extends Component {
 
 				<Splitter>
 					<SplitterSide 
+						width = {150}
 						collapse = {this.state.collapse}
 						side = {this.state.side}
 						isOpen = {this.state.isOpenMenu}
@@ -45,7 +46,7 @@ class Demo extends Component {
 						<Page>
 							<div> Content </div>
 							<div>
-								<button onClick = {this.toggleMenu.bind(this)} style = {{right : 0, position: 'absolute'}} > Menu </button>
+								<button onClick = {this.toggleMenu.bind(this)} > Menu </button>
 							</div>
 							<div>
 								<button onClick = {this.switchSide.bind(this)}> {this.state.side === 'left' ? 'Left':'Right'} </button>
