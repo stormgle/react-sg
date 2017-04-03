@@ -33,7 +33,7 @@ class SplitterSide extends BaseComponent {
     super(props);
 
     this.state = {
-      width : 0,
+      // width : 0, changed: auto width is disabled
       animation : null,
       isOpen : false
     };
@@ -45,7 +45,8 @@ class SplitterSide extends BaseComponent {
   }
 
   componentDidMount() {
-    this.setState({width : this.instance.clientWidth + 1});
+    /* changed: auto width is disabled */
+    // this.setState({width : this.instance.clientWidth + 1});
   }
 
   
@@ -75,8 +76,8 @@ class SplitterSide extends BaseComponent {
     const isOpen = this.props.collapse ? true : this.props.isOpen || false;
     const side = this.props.side || 'left';
     const position = side === 'right' ?
-          isOpen || this.state.animation ? {right: 0} : {right: `-${this.state.width}px`}:
-          isOpen || this.state.animation ? {left: 0}  : {left: `-${this.state.width}px`};                   
+          isOpen || this.state.animation ? {right: 0} : {right: `-${width.width}`}:
+          isOpen || this.state.animation ? {left: 0}  : {left: `-${width.width}`};                   
     const style = {...this.state.animation, ...position, ...width};  
     return (
       <sg-splitter-side >
@@ -93,21 +94,22 @@ class SplitterSide extends BaseComponent {
 
   _getAndFormatWidth() {
     if (!this.props.width) {
-      return null;
+      return { width:'200px' }; // changed: auto width is disabled, default is 200px
     }
   
     if (util.isNumber(this.props.width)) {
-      return { width : `${this.props.width}px`};
+      return { width: `${this.props.width}px`};
     }
 
     const width = this.props.width.trim();
-    if (/(^\d+px$|^\d+%$)/i.test(width)) {
+    // if (/(^\d+px$|^\d+%$)/i.test(width)) { // changed: width in percentage is not supported
+    if (/^\d+px$/i.test(width)) {
       return {width}; 
     } else {
       log.warn({
         root : 'SpliterSide', 
         message : 'Invalid value of width',
-        detail : 'Width should be a number or a string ended with px or %'
+        detail : 'Width should be a number or a string ended with px'
       });
       return null;
     }   
