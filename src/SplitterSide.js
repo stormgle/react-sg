@@ -52,6 +52,15 @@ class SplitterSide extends BaseComponent {
   
   componentWillReceiveProps(nextProps) {
     if (!this.props.collapse && (nextProps.isOpen !== this.state.isOpen)) {
+      
+      /* hook pre open/close callback here */
+      if (nextProps.isOpen) {
+        if (nextProps.onPreOpen) { nextProps.onPreOpen(); }
+      } else {
+        if (nextProps.onPreClose) { nextProps.onPreClose(); }
+      }
+
+      /* continue with animation */
       let animation = null;   
       let to = 0;
       let anim = nextProps.animation || 'none';
@@ -67,6 +76,12 @@ class SplitterSide extends BaseComponent {
       }
       setTimeout(() => {
         this.setState({ animation : null });
+        /* hook on open.close callback here */
+        if (nextProps.isOpen) {
+        if (nextProps.onOpen) { nextProps.onOpen(); }
+      } else {
+        if (nextProps.onClose) { nextProps.onClose(); }
+      }
       }, to);  
     }
   }
