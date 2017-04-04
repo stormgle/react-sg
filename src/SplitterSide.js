@@ -51,7 +51,14 @@ class SplitterSide extends BaseComponent {
 
   
   componentWillReceiveProps(nextProps) {
-    if (!this.props.collapse && (nextProps.isOpen !== this.state.isOpen)) {
+
+    /* animation is skipped when collapsed */
+    if (this.props.collapse) {
+      this.setState({ isOpen : nextProps.isOpen });
+      return;
+    }
+
+    if (nextProps.isOpen !== this.state.isOpen) {
       
       /* hook pre open/close callback here */
       if (nextProps.isOpen) {
