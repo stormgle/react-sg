@@ -37,6 +37,10 @@ class Demo extends Component {
 						isOpen = {this.state.isOpenMenu}
 						shouldLockContent = {this.state.lockContent}
 						animation	= 'slide'
+						onPreOpen = {() => alert('onPreOpen')}
+						onOpen = {() => alert('onOpen')}
+						onPreClose = {() => alert('onPreClose')}
+						onClose = {() => alert('onClose')}
 						>
 						<h3> HEADING 3 </h3>
 						<br />
