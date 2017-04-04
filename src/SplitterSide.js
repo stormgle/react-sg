@@ -23,10 +23,10 @@ class SplitterSide extends BaseComponent {
    * @param {Boolean} shouldLockContent - lock the splitter content by a mask
    * @param {String} maskColor - color of the mask (not implement yet)
    * @param {String} maskOpacity - opacity of the mask (not implement yet)
-   * @param {Function} onOpen - Call when the Spliter side is opened (not implement yet)
-   * @param {Function} onPreOpen - Call before opening the Spliter side (not implement yet)
-   * @param {Function} onClose - Call when the Spliter side is closed (not implement yet)
-   * @param {Function} onPreClose - Call before closing the Spliter side (not implement yet)
+   * @param {Function} onOpen - Call when the Spliter side is opened 
+   * @param {Function} onPreOpen - Call before opening the Spliter side 
+   * @param {Function} onClose - Call when the Spliter side is closed 
+   * @param {Function} onPreClose - Call before closing the Spliter side 
    *  
    */
   constructor(props) {
