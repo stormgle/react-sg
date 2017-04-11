@@ -10,7 +10,8 @@ module.exports = {
 		/* demo pages */
 		page: './demo/lib/page.js',
 		navigator: './demo/lib/navigator.js',
-		splitter: './demo/lib/splitter.js'
+		splitter: './demo/lib/splitter.js',
+		sidebar: './demo/lib/sidebar.js'
 	}, 
 
   output: {
