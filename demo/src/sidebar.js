@@ -26,7 +26,8 @@ class App extends Component {
                 isOpen = {this.state.isOpen}
                 collapse = 'auto'
                 width = '350'
-                side = 'right' >
+                side = 'right'
+                overlay = {true} >
 
             <a className="w3-bar-item w3-display-container"><h4>
                 Menu                
