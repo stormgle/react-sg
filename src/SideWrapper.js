@@ -21,7 +21,8 @@ class SideWrapper extends BaseComponent {
     this.childrenProps = {};
 
     this.bind('_getChildProps', '_genChildren', 
-              '_isCollapseAuto', '_isCollapseTrue'
+              '_isCollapseAuto', '_isCollapseTrue',
+              '_isSideBarShowing'
     );
 
   }
@@ -32,7 +33,7 @@ class SideWrapper extends BaseComponent {
       <sg-side-wrapper>
         <div className = 'side-wrapper' >
           {children}
-          <div className = 'side-overlay w3-overlay' />
+          <div className = 'side-overlay w3-overlay' style = {this._getOverlayStyle()} />
         </div>         
       </sg-side-wrapper>
     );
@@ -44,9 +45,9 @@ class SideWrapper extends BaseComponent {
       if (child.type && child.type.sgType === 'side-bar') {        
         this.childrenProps.sideBar = {
           width: this.formatWidth(child.props.width),
-          collapse: child.props.collapse,
-          side: child.props.side,
-          overlay: child.props.overlay,
+          collapse: child.props.collapse || false,
+          side: child.props.side || 'left',
+          overlay: child.props.overlay || false,
           isOpen: child.props.isOpen || false,
         };
       }
@@ -71,7 +72,7 @@ class SideWrapper extends BaseComponent {
           style.right = 0;
         }        
         // sidebar show or hide
-        if (this._isCollapseTrue() || this.childrenProps.sideBar.isOpen) {
+        if (this._isCollapseTrue() || this._isSideBarShowing()) {
           style.display = 'block';
         } else {
           style.display = 'none';
@@ -140,6 +141,20 @@ class SideWrapper extends BaseComponent {
   _isCollapseTrue() {
     const collapse = this.childrenProps.sideBar.collapse;
     return collapse === true;
+  }
+
+  _isSideBarShowing() {
+    return this.childrenProps.sideBar.isOpen === true;
+  }
+
+  _getOverlayStyle() {
+    const style = {display: 'none', zIndex: 0};
+    if (this.childrenProps.sideBar.overlay === true) {
+      if (this._isSideBarShowing()) {
+        style.display = 'block';
+      }
+    }
+    return style;
   }
 
 }
