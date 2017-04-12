@@ -14,4 +14,18 @@ let  Util = {};
   };
 });
 
+Util.getStyle = function (e, styleName) {
+    let styleValue = "";
+    if(document.defaultView && document.defaultView.getComputedStyle) {
+        styleValue = document.defaultView.getComputedStyle(e, "").getPropertyValue(styleName);
+    }
+    else if(e.currentStyle) {
+        styleName = styleName.replace(/\-(\w)/g, function (strMatch, p1) {
+            return p1.toUpperCase();
+        });
+        styleValue = e.currentStyle[styleName];
+    }
+    return styleValue;
+}
+
 export default Util;
