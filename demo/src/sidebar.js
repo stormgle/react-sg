@@ -25,13 +25,14 @@ class App extends Component {
         <SideBar
                 isOpen = {this.state.isOpen}
                 collapse = 'auto'
-                width = '350'
+                width = '250'
                 side = 'right'
-                overlay = {true} >
+                overlay = {false}
+                onClickOutside = {this.closeSidebar.bind(this)} >
 
             <a className="w3-bar-item w3-display-container"><h4>
                 Menu                
-                <button className="w3-button w3-white w3-display-topright" onClick={this.toggleSidebar.bind(this)} > &times;</button>
+                <button className="w3-button w3-white w3-display-topright" onClick={this.closeSidebar.bind(this)} > &times;</button>
             </h4></a>
             <a className="w3-bar-item w3-button" href="#">Link 1</a>
             <a className="w3-bar-item w3-button" href="#">Link 2</a>
@@ -48,8 +49,13 @@ class App extends Component {
     );
   }
 
-  toggleSidebar() {
+  toggleSidebar(e) {
+    e.stopPropagation();
     this.setState({ isOpen : !this.state.isOpen });
+  }
+
+  closeSidebar() {
+    this.setState({ isOpen : false });
   }
 
 }

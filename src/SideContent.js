@@ -16,12 +16,15 @@ class SideContent extends BaseComponent {
 
   render() {
     const style = this.props.style;
+    style.position = 'absolute';
+    style.width = '100%';
+    style.height = '100%';
     const w3class = this.props.w3class;   
     return (
-      <sg-side-content>
-         <div className = {w3class} style = {style} >
-           {this.props.children}           
-        </div>
+      <sg-side-content>        
+        <div className = {w3class} style = {style} onClick = {this.props.onClick} >
+          {this.props.children}           
+        </div>        
       </sg-side-content>
     )
   }

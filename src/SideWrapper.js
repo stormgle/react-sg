@@ -22,7 +22,7 @@ class SideWrapper extends BaseComponent {
 
     this.bind('_getChildProps', '_genChildren', 
               '_isCollapseAuto', '_isCollapseTrue',
-              '_isSideBarShowing'
+              '_isSideBarShowing', '_onClickOutsideSideBar'
     );
 
   }
@@ -33,7 +33,9 @@ class SideWrapper extends BaseComponent {
       <sg-side-wrapper>
         <div className = 'side-wrapper' >
           {children}
-          <div className = 'side-overlay w3-overlay' style = {this._getOverlayStyle()} />
+          <div className = 'side-overlay w3-overlay' 
+               style = {this._getOverlayStyle()}
+               onClick = {this._onClickOutsideSideBar} />
         </div>         
       </sg-side-wrapper>
     );
@@ -49,6 +51,7 @@ class SideWrapper extends BaseComponent {
           side: child.props.side || 'left',
           overlay: child.props.overlay || false,
           isOpen: child.props.isOpen || false,
+          onClickOutside : child.props.onClickOutside || null,
         };
       }
       if (child.type && child.type.sgType === 'side-content') {
@@ -100,7 +103,7 @@ class SideWrapper extends BaseComponent {
         /* process class */
         const w3class = this._isCollapseAuto() ? 'w3-main' : '';
 
-        return React.cloneElement(child, {style, w3class});
+        return React.cloneElement(child, {style, w3class, onClick : this._onClickOutsideSideBar});
       }      
     });
 
@@ -155,6 +158,12 @@ class SideWrapper extends BaseComponent {
       }
     }
     return style;
+  }
+
+  _onClickOutsideSideBar() {
+    if (this.childrenProps.sideBar.onClickOutside) {
+      this.childrenProps.sideBar.onClickOutside();
+    }
   }
 
 }

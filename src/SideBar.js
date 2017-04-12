@@ -16,6 +16,7 @@ class SideBar extends BaseComponent {
    * @param {Number}          width - width of Splitter side. number represent for pixel unit
    * @param {Boolean|String}  collapse - specify collapse behavior, if 'auto' sidebar will collapse on large screen  
    * @param {Boolean}         isOpen - true to show the component
+   * @param {Function}        onClickOutside - callback function to call when click outside sidebar
    * @param {String}          backgroundColor - background color
    * @param {Boolean}         overlay - lock the splitter content by a mask
    * @param {Function}        onOpen - Call when the Spliter side is opened 
