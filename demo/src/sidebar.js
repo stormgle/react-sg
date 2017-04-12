@@ -24,7 +24,7 @@ class App extends Component {
       <SideWrapper>
         <SideBar
                 isOpen = {this.state.isOpen}
-                collapse = {true}
+                collapse = 'auto'
                 width = '350'
                 side = 'right' >
 

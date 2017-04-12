@@ -12,16 +12,16 @@ class SideBar extends BaseComponent {
 
   /**
    * Render a Splitter Side insile the Splitter   
-   * @param {String}    side - position Left or Right
-   * @param {Number}    width - width of Splitter side. number represent for pixel unit
-   * @param {Boolean}   collapse - specify collapse behavior   
-   * @param {Boolean}   isOpen - true to show the component
-   * @param {String}    backgroundColor - background color
-   * @param {Boolean}   overlay - lock the splitter content by a mask
-   * @param {Function}  onOpen - Call when the Spliter side is opened 
-   * @param {Function}  onPreOpen - Call before opening the Spliter side 
-   * @param {Function}  onClose - Call when the Spliter side is closed 
-   * @param {Function}  onPreClose - Call before closing the Spliter side 
+   * @param {String}          side - position Left or Right
+   * @param {Number}          width - width of Splitter side. number represent for pixel unit
+   * @param {Boolean|String}  collapse - specify collapse behavior, if 'auto' sidebar will collapse on large screen  
+   * @param {Boolean}         isOpen - true to show the component
+   * @param {String}          backgroundColor - background color
+   * @param {Boolean}         overlay - lock the splitter content by a mask
+   * @param {Function}        onOpen - Call when the Spliter side is opened 
+   * @param {Function}        onPreOpen - Call before opening the Spliter side 
+   * @param {Function}        onClose - Call when the Spliter side is closed 
+   * @param {Function}        onPreClose - Call before closing the Spliter side 
    *  
    */
   constructor(props) {

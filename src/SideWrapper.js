@@ -20,7 +20,9 @@ class SideWrapper extends BaseComponent {
 
     this.childrenProps = {};
 
-    this.bind('_getChildProps', '_genChildren');
+    this.bind('_getChildProps', '_genChildren', 
+              '_isCollapseAuto', '_isCollapseTrue'
+    );
 
   }
 
@@ -69,22 +71,25 @@ class SideWrapper extends BaseComponent {
           style.right = 0;
         }        
         // sidebar show or hide
-        if (this.childrenProps.sideBar.isOpen) {
+        if (this._isCollapseTrue() || this.childrenProps.sideBar.isOpen) {
           style.display = 'block';
         } else {
           style.display = 'none';
         }
         /* process class */
         const _baseClass = 'w3-sidebar w3-bar-block';
-        const w3class = child.props.collapse ? `${_baseClass} w3-collapse` : _baseClass;
-
+        let w3class = _baseClass;
+        if (this._isCollapseAuto()) {
+          w3class = `${_baseClass} w3-collapse`
+        }
         return React.cloneElement(child, {style, w3class});
       }
 
       if (child.type && child.type.sgType === 'side-content') {
         /* process style */
         const style = {...child.props.style};
-        if (this.childrenProps.sideBar.collapse) {
+        /* when collapse is auto, w3css will auto adjust margin of w3-main */
+        if (this._isCollapseTrue() || this._isCollapseAuto()) {
           if (this.childrenProps.sideBar.side === 'right') {
             style.marginRight = this.childrenProps.sideBar.width;
           } else {
@@ -92,7 +97,7 @@ class SideWrapper extends BaseComponent {
           }        
         }
         /* process class */
-        const w3class = 'w3-main';
+        const w3class = this._isCollapseAuto() ? 'w3-main' : '';
 
         return React.cloneElement(child, {style, w3class});
       }      
@@ -114,6 +119,8 @@ class SideWrapper extends BaseComponent {
       width = width.trim().replace(" ", "");
       if (/(^\d+px$)|(^\d+%$)/i.test(width)) {
         return width
+      } else if(util.isNumber(parseInt(width))) {
+        return `${parseInt(width)}px`;
       } else {
         log.warn({
           root : 'SideBar', 
@@ -123,6 +130,16 @@ class SideWrapper extends BaseComponent {
         return DEFAULT_SIDE_WIDTH;
       }
     }    
+  }
+
+  _isCollapseAuto() {
+    const collapse = this.childrenProps.sideBar.collapse;
+    return util.isString(collapse) && collapse.toLowerCase() === 'auto';
+  }
+
+  _isCollapseTrue() {
+    const collapse = this.childrenProps.sideBar.collapse;
+    return collapse === true;
   }
 
 }
