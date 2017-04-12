@@ -111,7 +111,7 @@ class SideWrapper extends BaseComponent {
     }
 
     if (util.isString(width)) {
-      width = width.trim();
+      width = width.trim().replace(" ", "");
       if (/(^\d+px$)|(^\d+%$)/i.test(width)) {
         return width
       } else {
