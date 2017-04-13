@@ -40,5 +40,8 @@
     "express": "^4.15.2",
     "extract-text-webpack-plugin": "^2.1.0",
     "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "media-query": "^1.0.0"
   }
 }

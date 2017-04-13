@@ -2,6 +2,8 @@
 
 import React from 'react'
 
+import mq from 'media-query'
+
 import util from './lib/util'
 import log from './lib/log'
 
@@ -18,20 +20,33 @@ class SideWrapper extends BaseComponent {
   constructor(props) {
     super(props);
 
+    this.state = { width : null };
+
     this.childrenProps = {};
+    this.instance = null;
 
     this.bind('_getChildProps', '_genChildren', 
-              '_isCollapseAuto', '_isCollapseTrue',
-              '_isSideBarShowing', '_onClickOutsideSideBar'
+              '_isCollapseAuto', '_isCollapseTrue', '_isCollapsed',
+              '_isSideBarShowing', '_onClickOutsideSideBar',
+              '_getInstance', 'getWidthReactively'
     );
 
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.getWidthReactively, false);
+    this.getWidthReactively();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.getWidthReactively, false);
   }
 
   render() {
     const children = this._getChildProps()._genChildren();
     return (
       <sg-side-wrapper>
-        <div className = 'side-wrapper' >
+        <div className = 'side-wrapper' ref = {this._getInstance}>
           {children}
           <div className = 'side-overlay w3-overlay' 
                style = {this._getOverlayStyle()}
@@ -55,7 +70,17 @@ class SideWrapper extends BaseComponent {
         };
       }
       if (child.type && child.type.sgType === 'side-content') {
-        this.childrenProps.sideContent = {};
+        /* if side bar is collapsed, the content with must be re-calculated */
+        let width = '100%';
+        if (this._isCollapsed()) {
+          const screenWidth = this.state.width;
+          const barWidth = this.getSideBarWidthInNumber(this.childrenProps.sideBar.width, screenWidth);
+          const contentWidth = screenWidth - barWidth;
+          width = this.formatWidth(contentWidth);
+        }
+        this.childrenProps.sideContent = {
+          width
+        };
       }
     });    
     return this;
@@ -92,6 +117,9 @@ class SideWrapper extends BaseComponent {
       if (child.type && child.type.sgType === 'side-content') {
         /* process style */
         const style = {...child.props.style};
+        style.width = this.childrenProps.sideContent.width;
+        style.position = 'absolute';
+        style.height = '100%';
         /* when collapse is auto, w3css will auto adjust margin of w3-main */
         if (this._isCollapseTrue() || this._isCollapseAuto()) {
           if (this.childrenProps.sideBar.side === 'right') {
@@ -102,7 +130,6 @@ class SideWrapper extends BaseComponent {
         }
         /* process class */
         const w3class = this._isCollapseAuto() ? 'w3-main' : '';
-
         return React.cloneElement(child, {style, w3class, onClick : this._onClickOutsideSideBar});
       }      
     });
@@ -136,6 +163,30 @@ class SideWrapper extends BaseComponent {
     }    
   }
 
+  getSideBarWidthInNumber(barWidth, screenWidth) {
+    if (!barWidth) { return 0 }
+
+    if (util.isNumber(barWidth)) {
+      return barWidth;
+    }
+
+    if (util.isString(barWidth)) {
+      /* sidebar width is defined in pixel */
+      if (/^\d+px$/i.test(barWidth)) {
+        return parseInt(barWidth.replace('px',''));
+      }
+      /* sidebar width is defined in percentage */
+      if (/^\d+%$/i.test(barWidth)) {
+        const barWidthInPercentage = parseInt(barWidth.replace('%',''));
+        return barWidthInPercentage * parseInt(screenWidth) / 100;
+      }
+    }
+
+    /* wrong input type */
+    return 0;
+
+  }
+
   _isCollapseAuto() {
     const collapse = this.childrenProps.sideBar.collapse;
     return util.isString(collapse) && collapse.toLowerCase() === 'auto';
@@ -144,6 +195,17 @@ class SideWrapper extends BaseComponent {
   _isCollapseTrue() {
     const collapse = this.childrenProps.sideBar.collapse;
     return collapse === true;
+  }
+
+  _isCollapsed() {
+    if (this._isCollapseTrue()) {
+      return true;
+    }
+    if (this._isCollapseAuto() && (mq.isLarge() || mq.isxLarge())) {
+      return true;
+    }
+    /* reach here mean collapse is false or auto but small screen */
+    return false;
   }
 
   _isSideBarShowing() {
@@ -165,6 +227,18 @@ class SideWrapper extends BaseComponent {
       this.childrenProps.sideBar.onClickOutside();
     }
   }
+
+  getWidthReactively() {
+    if (this.instance) {
+      const width = parseInt(this.instance.clientWidth);
+      this.setState({ width });
+    }  
+  }
+
+  _getInstance(el) {
+    this.instance = el;
+  }
+
 
 }
 

@@ -16,9 +16,6 @@ class SideContent extends BaseComponent {
 
   render() {
     const style = this.props.style;
-    style.position = 'absolute';
-    style.width = '100%';
-    style.height = '100%';
     const w3class = this.props.w3class;   
     return (
       <sg-side-content>        
