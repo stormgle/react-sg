@@ -22,14 +22,16 @@ class SideWrapper extends BaseComponent {
   constructor(props) {
     super(props);
 
-    this.state = { width : null };
+    this.state = { 
+      width : null
+    };
 
     this.childrenProps = {};
     this.instance = null;
 
     this.bind('_getChildProps', '_genChildren', 
               '_isCollapseAuto', '_isCollapseTrue', '_isCollapsed',
-              '_isSideBarShowing', '_onClickOutsideSideBar',
+              '_isSideBarOpened', '_onClickOutsideSideBar',
               '_getInstance', 'getWidthReactively'
     );
 
@@ -42,6 +44,10 @@ class SideWrapper extends BaseComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.getWidthReactively, false);
+  }
+
+  componentWillReceiveProps(nextProps) {
+
   }
 
   render() {
@@ -108,7 +114,7 @@ class SideWrapper extends BaseComponent {
         // sidebar show or hide
         if (this._isCollapseTrue()) {
           style.display = 'block';
-        } else if (this._isSideBarShowing()) {
+        } else if (this._isSideBarOpened()) {
           // process animation
           style.display = 'block';
           if (sideBar.animation !== 'none') {
@@ -243,14 +249,14 @@ class SideWrapper extends BaseComponent {
     return false;
   }
 
-  _isSideBarShowing() {
+  _isSideBarOpened() {
     return this.childrenProps.sideBar.isOpen === true;
   }
 
   _getOverlayStyle() {
     const style = {display: 'none', zIndex: 0};
     if (this.childrenProps.sideBar.overlay === true) {
-      if (this._isSideBarShowing()) {
+      if (this._isSideBarOpened()) {
         style.display = 'block';
       }
     }
