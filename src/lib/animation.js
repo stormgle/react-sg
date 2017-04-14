@@ -3,8 +3,13 @@
 import log from './log'
 import util from './util'
 
+const animationList = [
+  'animate-slide', 'animate-slide-left', 'animate-slide-right'
+];
+
 export function createAnimStyle(name = '', options = {}) {
 
+  /* validation code here will be replace by validateAnimationName function later */
   if (name === undefined || name === null || name.length === 0) {
     log.error({
       root : 'Animation', 
@@ -47,4 +52,42 @@ export function createAnimStyle(name = '', options = {}) {
     WebkitAnimation: animation,
     animation: animation,
   };
+}
+
+export function validateAnimationName(name) {
+  if (name === undefined || name === null || name.length === 0) {
+    log.error({
+      root : 'Animation', 
+      message : 'Missing animation name',
+      detail : 'An animation name must be specified to use animation'
+    });
+    return false;
+  }
+  if (!util.isString(name)) {
+    log.error({
+      root : 'Animation', 
+      message : 'Invalid animation name',
+      detail : 'Animation name must be String'
+    });
+    return false;
+  }
+  /* special case where animation name is none, return false withdout error */
+  if (name.toLowerCase() === 'none') {
+    return false;
+  }
+  /* check with the valid name list */
+  if (animationList.indexOf(name) === -1) {
+    let detail = 'Animation name must be one of the following:\n[';
+    animationList.forEach(n => detail = `${detail} ${n}`);
+    detail = `${detail}]`
+    log.error({
+      root : 'Animation', 
+      message : 'Invalid animation name',
+      detail
+    });
+    return false;
+  }
+  
+
+  return true;
 }

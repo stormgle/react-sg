@@ -4,7 +4,7 @@ import React from 'react'
 
 import mq from 'media-query'
 
-import { createAnimStyle } from './lib/animation'
+import { createAnimStyle, validateAnimationName } from './lib/animation'
 import util from './lib/util'
 import log from './lib/log'
 
@@ -31,8 +31,9 @@ class SideWrapper extends BaseComponent {
 
     this.bind('_getChildProps', '_genChildren', 
               '_isCollapseAuto', '_isCollapseTrue', '_isCollapsed',
-              '_isSideBarOpened', '_onClickOutsideSideBar',
-              '_getInstance', 'getWidthReactively'
+              '_isSideBarOpen', '_onClickOutsideSideBar',
+              '_getInstance', 'getWidthReactively',
+              'onAnimationEnd'
     );
 
   }
@@ -67,8 +68,23 @@ class SideWrapper extends BaseComponent {
 
   _getChildProps() {
     React.Children.forEach(this.props.children, child => {
-      if (child.type && child.type.sgType === 'side-bar') {        
+      if (child.type && child.type.sgType === 'side-bar') {   
+        /* detect whether side bar is opening or closing. it is useful for
+           determining whether we should apply animation
+        */     
+        let isOpening = false;
+        let isClosing = false;
+        if (this.childrenProps.sideBar) {
+          if (!this.childrenProps.sideBar.isOpen && child.props.isOpen) {
+            isOpening = true;
+          }
+          if (this.childrenProps.sideBar.isOpen && !child.props.isOpen) {
+            isClosing = true;
+          }
+        }
+
         this.childrenProps.sideBar = {
+          isOpening, isClosing,
           width: this.formatWidth(child.props.width),
           collapse: child.props.collapse || false,
           side: child.props.side || 'left',
@@ -114,28 +130,30 @@ class SideWrapper extends BaseComponent {
         // sidebar show or hide
         if (this._isCollapseTrue()) {
           style.display = 'block';
-        } else if (this._isSideBarOpened()) {
-          // process animation
-          style.display = 'block';
-          if (sideBar.animation !== 'none') {
-            const animation = sideBar.animation;
-            const animationOptions = sideBar.animationOptions;
-            const anim = createAnimStyle(animation, animationOptions);
-            Object.assign(style,anim);
-          }
-        } else {
-            if (sideBar.animation !== 'none') {
-              const animation = sideBar.animation;
-              const animationOptions = {...sideBar.animationOptions};
-              animationOptions.direction = 'reverse';
-              const anim = createAnimStyle(animation, animationOptions);
+        } else if (!this._isCollapsed()) {
+          if (sideBar.isOpening) {
+            // process animation
+            style.display = 'block';
+            if (validateAnimationName(sideBar.animation)) {
+              const anim = this._getAnimation(sideBar, 'forwards');
               Object.assign(style,anim);
-              /* display will be set to none after animation end */
+            }
+          } else if (sideBar.isClosing) {
+            if (validateAnimationName(sideBar.animation)) {
+              style.display = 'block'; // to let animation happen
+              const anim = this._getAnimation(sideBar, 'reverse');
+              Object.assign(style,anim);
             } else {
               style.display = 'none';
             }
+          } else { // in case not changing open/close state
+            if (this._isSideBarOpen()) {
+              style.display = 'block';
+            } else {
+              style.display = 'none';
+            }
+          }
         }
-        
         /* process class */
         const _baseClass = 'w3-sidebar w3-bar-block';
         let w3class = _baseClass;
@@ -152,7 +170,7 @@ class SideWrapper extends BaseComponent {
         } else {
           style.backgroundColor = backgroundColor;
         }
-        return React.cloneElement(child, {style, w3class});
+        return React.cloneElement(child, {style, w3class, onAnimationEnd: this.onAnimationEnd});
       }
 
       if (child.type && child.type.sgType === 'side-content') {
@@ -249,14 +267,14 @@ class SideWrapper extends BaseComponent {
     return false;
   }
 
-  _isSideBarOpened() {
+  _isSideBarOpen() {
     return this.childrenProps.sideBar.isOpen === true;
   }
 
   _getOverlayStyle() {
     const style = {display: 'none', zIndex: 0};
     if (this.childrenProps.sideBar.overlay === true) {
-      if (this._isSideBarOpened()) {
+      if (this._isSideBarOpen()) {
         style.display = 'block';
       }
     }
@@ -280,6 +298,25 @@ class SideWrapper extends BaseComponent {
     this.instance = el;
   }
 
+  _getAnimation(sideBar, direction) {
+
+    let animation = sideBar.animation.trim();
+    if (!/(-left$)|(-right$)/i.test(animation)) {
+      animation = `${animation}-${sideBar.side.toLowerCase()}`;
+    }
+    const animationOptions = {...sideBar.animationOptions};
+    if (direction) {
+      animationOptions.direction = direction;
+    }   
+
+    return createAnimStyle(animation, animationOptions);
+
+  }
+
+  onAnimationEnd() {
+    // forced re-render to update display after animation finished
+    this.setState({})
+  }
 
 }
 

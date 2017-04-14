@@ -23,7 +23,8 @@ class SideBar extends BaseComponent {
    * @param {Function}        onPreOpen - Call before opening the Spliter side 
    * @param {Function}        onClose - Call when the Spliter side is closed 
    * @param {Function}        onPreClose - Call before closing the Spliter side 
-   *  
+   * @param {String}          animation - define animation
+   * @param {Object}          animationOptions - define animation option 
    */
   constructor(props) {
     super(props);
@@ -65,15 +66,6 @@ class SideBar extends BaseComponent {
   }
 
   onAnimationEnd() {
-    console.log(this.instance.style.animation)
-    if (this.instance) {
-      if (/forwards/.test(this.instance.style.animation)) {
-        this.instance.style.display = 'block';
-      } else if (/reverse/.test(this.instance.style.animation)) {
-        this.instance.style.display = 'none';
-      }
-      this.instance.style.animation = null;          
-    }
     if (this.props.onAnimationEnd) {
       this.props.onAnimationEnd();
     }
