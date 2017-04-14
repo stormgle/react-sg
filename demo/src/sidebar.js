@@ -28,11 +28,12 @@ class App extends Component {
                 width = '250'
                 side = 'right'
                 overlay = {false}
-                onClickOutside = {this.closeSidebar.bind(this)} >
+                onClickOutside = {this.closeSidebar.bind(this)}
+                backgroundColor = 'w3-blue-grey' >
 
             <a className="w3-bar-item w3-display-container"><h4>
                 Menu                
-                <button className="w3-button w3-white w3-display-topright" onClick={this.closeSidebar.bind(this)} > &times;</button>
+                <button className="w3-button w3-red w3-display-topright" onClick={this.closeSidebar.bind(this)} > &times;</button>
             </h4></a>
             <a className="w3-bar-item w3-button" href="#">Link 1</a>
             <a className="w3-bar-item w3-button" href="#">Link 2</a>

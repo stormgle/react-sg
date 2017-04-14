@@ -10,6 +10,7 @@ import log from './lib/log'
 import BaseComponent from './BaseComponent'
 
 const DEFAULT_SIDE_WIDTH = '250px';
+const DEFAULT_BACKGROUND_COLOR = 'w3-light-grey';
 
 /**
  * SideWrapper Component
@@ -66,7 +67,8 @@ class SideWrapper extends BaseComponent {
           side: child.props.side || 'left',
           overlay: child.props.overlay || false,
           isOpen: child.props.isOpen || false,
-          onClickOutside : child.props.onClickOutside || null,
+          onClickOutside: child.props.onClickOutside || null,
+          backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR
         };
       }
       if (child.type && child.type.sgType === 'side-content') {
@@ -105,11 +107,22 @@ class SideWrapper extends BaseComponent {
         } else {
           style.display = 'none';
         }
+        
         /* process class */
         const _baseClass = 'w3-sidebar w3-bar-block';
         let w3class = _baseClass;
         if (this._isCollapseAuto()) {
           w3class = `${_baseClass} w3-collapse`
+        }
+
+        // background color can be w3 color name or standard color name or 
+        // hex string start by # or rgb, rgba
+        // if user input w3 color, we add it to class, otherwise, we add to inline style
+        const backgroundColor = this.childrenProps.sideBar.backgroundColor.trim();
+        if (/^w3-/.test(backgroundColor)) {
+          w3class = `${w3class} ${backgroundColor}`;
+        } else {
+          style.backgroundColor = backgroundColor;
         }
         return React.cloneElement(child, {style, w3class});
       }
