@@ -35,3 +35,27 @@
   0% { transform: translateY(0); }
   100% { transform: translateY(100%); }
 }
+
+/* ANIMATION */
+
+/* animation: slide from left */
+@-webkit-keyframes animate-slide-left {
+  from {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes animate-slide-left {
+  from {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

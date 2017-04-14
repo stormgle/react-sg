@@ -27,6 +27,25 @@ class SideBar extends BaseComponent {
    */
   constructor(props) {
     super(props);
+
+    this.instance = null;
+
+    this.bind('_getInstance', 'onAnimationEnd');
+
+  }
+
+  componentDidMount() {
+    if (this.instance) {
+      this.instance.addEventListener('webkitAnimationEnd', this.onAnimationEnd, false);
+      this.instance.addEventListener('animationend', this.onAnimationEnd, false);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.instance) {
+      this.instance.removeEventListener('webkitAnimationEnd', this.onAnimationEnd, false);
+      this.instance.removeEventListener('animationend', this.onAnimationEnd, false);
+    }
   }
 
   render() {
@@ -34,14 +53,32 @@ class SideBar extends BaseComponent {
     const w3class = this.props.w3class;
     return (
       <sg-sidebar>
-        <div className = {w3class} style = {style} >
+        <div className = {w3class} style = {style} ref = {this._getInstance} >
            {this.props.children}
         </div>
       </sg-sidebar>
     );
   }
 
-  
+  _getInstance(el) {
+    this.instance = el;
+  }
+
+  onAnimationEnd() {
+    console.log(this.instance.style.animation)
+    if (this.instance) {
+      if (/forwards/.test(this.instance.style.animation)) {
+        this.instance.style.display = 'block';
+      } else if (/reverse/.test(this.instance.style.animation)) {
+        this.instance.style.display = 'none';
+      }
+      this.instance.style.animation = null;          
+    }
+    if (this.props.onAnimationEnd) {
+      this.props.onAnimationEnd();
+    }
+  }
+
 }
 
 SideBar.propTypes = {

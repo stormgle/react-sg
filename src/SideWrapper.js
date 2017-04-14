@@ -4,6 +4,7 @@ import React from 'react'
 
 import mq from 'media-query'
 
+import { createAnimStyle } from './lib/animation'
 import util from './lib/util'
 import log from './lib/log'
 
@@ -68,7 +69,9 @@ class SideWrapper extends BaseComponent {
           overlay: child.props.overlay || false,
           isOpen: child.props.isOpen || false,
           onClickOutside: child.props.onClickOutside || null,
-          backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR
+          backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR,
+          animation: child.props.animation || 'none',
+          animationOptions: child.props.animationOptions || {},
         };
       }
       if (child.type && child.type.sgType === 'side-content') {
@@ -91,21 +94,40 @@ class SideWrapper extends BaseComponent {
   _genChildren() {
     const children = React.Children.map(this.props.children, child => {
       if (child.type && child.type.sgType === 'side-bar') {
+        const sideBar = this.childrenProps.sideBar;
         /* process style */
         const style = {...child.props.style};
         // style width
-        if (this.childrenProps.sideBar.width) {
-          style.width = this.childrenProps.sideBar.width;
+        if (sideBar.width) {
+          style.width = sideBar.width;
         }
         // sidebar position
-        if (this.childrenProps.sideBar.side === 'right') {
+        if (sideBar.side === 'right') {
           style.right = 0;
         }        
         // sidebar show or hide
-        if (this._isCollapseTrue() || this._isSideBarShowing()) {
+        if (this._isCollapseTrue()) {
           style.display = 'block';
+        } else if (this._isSideBarShowing()) {
+          // process animation
+          style.display = 'block';
+          if (sideBar.animation !== 'none') {
+            const animation = sideBar.animation;
+            const animationOptions = sideBar.animationOptions;
+            const anim = createAnimStyle(animation, animationOptions);
+            Object.assign(style,anim);
+          }
         } else {
-          style.display = 'none';
+            if (sideBar.animation !== 'none') {
+              const animation = sideBar.animation;
+              const animationOptions = {...sideBar.animationOptions};
+              animationOptions.direction = 'reverse';
+              const anim = createAnimStyle(animation, animationOptions);
+              Object.assign(style,anim);
+              /* display will be set to none after animation end */
+            } else {
+              style.display = 'none';
+            }
         }
         
         /* process class */
@@ -118,7 +140,7 @@ class SideWrapper extends BaseComponent {
         // background color can be w3 color name or standard color name or 
         // hex string start by # or rgb, rgba
         // if user input w3 color, we add it to class, otherwise, we add to inline style
-        const backgroundColor = this.childrenProps.sideBar.backgroundColor.trim();
+        const backgroundColor = sideBar.backgroundColor.trim();
         if (/^w3-/.test(backgroundColor)) {
           w3class = `${w3class} ${backgroundColor}`;
         } else {
