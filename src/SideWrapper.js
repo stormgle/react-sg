@@ -33,7 +33,8 @@ class SideWrapper extends BaseComponent {
               '_isCollapseAuto', '_isCollapseTrue', '_isCollapsed',
               '_isSideBarOpen', '_onClickOutsideSideBar',
               '_getInstance', 'getWidthReactively',
-              'onAnimationEnd'
+              'onAnimationEnd', 
+              '_applyAnimationToSideBar', '_applyAnimationToSideContent'
     );
 
   }
@@ -127,33 +128,9 @@ class SideWrapper extends BaseComponent {
         if (sideBar.side === 'right') {
           style.right = 0;
         }        
-        // sidebar show or hide
-        if (this._isCollapseTrue()) {
-          style.display = 'block';
-        } else if (!this._isCollapsed()) {
-          if (sideBar.isOpening) {
-            // process animation
-            style.display = 'block';
-            if (validateAnimationName(sideBar.animation)) {
-              const anim = this._getSideBarAnimation(sideBar, 'forwards');
-              Object.assign(style,anim);
-            }
-          } else if (sideBar.isClosing) {
-            if (validateAnimationName(sideBar.animation)) {
-              style.display = 'block'; // to let animation happen
-              const anim = this._getSideBarAnimation(sideBar, 'reverse');
-              Object.assign(style,anim);
-            } else {
-              style.display = 'none';
-            }
-          } else { // in case not changing open/close state
-            if (this._isSideBarOpen()) {
-              style.display = 'block';
-            } else {
-              style.display = 'none';
-            }
-          }
-        }
+        // sidebar show or hide with animation 
+        this._applyAnimationToSideBar(style);
+
         /* process class */
         const _baseClass = 'w3-sidebar w3-bar-block';
         let w3class = _baseClass;
@@ -188,33 +165,7 @@ class SideWrapper extends BaseComponent {
           }        
         }
         /* apply animation */
-        if (!this._isCollapsed()) {
-          const sideBar = this.childrenProps.sideBar;
-          if (sideBar.isOpening) {
-            // process animation
-            if (validateAnimationName(sideBar.animation)) {
-              const anim = this._getSideContentAnimation(sideBar, 'forwards');
-              Object.assign(style,anim);
-            }
-          } else if (sideBar.isClosing) {
-            if (validateAnimationName(sideBar.animation)) {
-              const anim = this._getSideContentAnimation(sideBar, 'reverse');
-              Object.assign(style,anim);
-            }
-          } else {
-            /* we need to maintain the translated position after animation has
-               removed. */
-            if (/(push)|(pushpull)/i.test(sideBar.animation) && 
-                this._isSideBarOpen()) {
-              // apply translate depending on side bar side left or right &
-              // side bar width (in percentage)  
-              const screenWidth = this.state.width;
-              const minus = sideBar.side.toLowerCase() === 'right'? '-' : '';
-              const deviation = this.getSideBarWidthInPercentage(sideBar.width, screenWidth);
-              style.transform = `translateX(${minus}${deviation}%)`;
-            }   
-          }        
-        }
+        this._applyAnimationToSideContent(style);
         /* process class */
         const w3class = this._isCollapseAuto() ? 'w3-main' : '';
         return React.cloneElement(child, {style, w3class, onClick : this._onClickOutsideSideBar});
@@ -403,8 +354,64 @@ class SideWrapper extends BaseComponent {
 
   }
 
-  _applyAnimationToStyle(style) {
+  _applyAnimationToSideBar(style) {
+    const sideBar = this.childrenProps.sideBar;
+    if (this._isCollapseTrue()) {
+      style.display = 'block';
+    } else if (!this._isCollapsed()) {
+      if (sideBar.isOpening) {
+        // process animation
+        style.display = 'block';
+        if (validateAnimationName(sideBar.animation)) {
+          const anim = this._getSideBarAnimation(sideBar, 'forwards');
+          Object.assign(style,anim);
+        }
+      } else if (sideBar.isClosing) {
+        if (validateAnimationName(sideBar.animation)) {
+          style.display = 'block'; // to let animation happen
+          const anim = this._getSideBarAnimation(sideBar, 'reverse');
+          Object.assign(style,anim);
+        } else {
+          style.display = 'none';
+        }
+      } else { // in case not changing open/close state
+        if (this._isSideBarOpen()) {
+          style.display = 'block';
+        } else {
+          style.display = 'none';
+        }
+      }
+    }
+  }
 
+  _applyAnimationToSideContent(style) {
+    if (!this._isCollapsed()) {
+      const sideBar = this.childrenProps.sideBar;
+      if (sideBar.isOpening) {
+        // process animation
+        if (validateAnimationName(sideBar.animation)) {
+          const anim = this._getSideContentAnimation(sideBar, 'forwards');
+          Object.assign(style,anim);
+        }
+      } else if (sideBar.isClosing) {
+        if (validateAnimationName(sideBar.animation)) {
+          const anim = this._getSideContentAnimation(sideBar, 'reverse');
+          Object.assign(style,anim);
+        }
+      } else {
+        /* we need to maintain the translated position after animation has
+            removed. */
+        if (/(push)|(pushpull)/i.test(sideBar.animation) && 
+            this._isSideBarOpen()) {
+          // apply translate depending on side bar side left or right &
+          // side bar width (in percentage)  
+          const screenWidth = this.state.width;
+          const minus = sideBar.side.toLowerCase() === 'right'? '-' : '';
+          const deviation = this.getSideBarWidthInPercentage(sideBar.width, screenWidth);
+          style.transform = `translateX(${minus}${deviation}%)`;
+        }   
+      }        
+    }
   }
 
   onAnimationEnd() {
