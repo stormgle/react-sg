@@ -4,7 +4,8 @@ import log from './log'
 import util from './util'
 
 const animationList = [
-  'animate-slide', 'animate-slide-left', 'animate-slide-right'
+  'animate-slide', 'animate-slide-left', 'animate-slide-right',
+  'animate-push', 'animate-push-left', 'animation-push-right',
 ];
 
 export function createAnimStyle(name = '', options = {}) {

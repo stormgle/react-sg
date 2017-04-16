@@ -25,13 +25,13 @@ class App extends Component {
         <SideBar
                 isOpen = {this.state.isOpen}
                 collapse = 'auto'
-                width = '250'
+                width = '333'
                 side = 'right'
                 overlay = {false}
                 onClickOutside = {this.closeSidebar.bind(this)}
                 backgroundColor = 'w3-blue-grey'
-                animation = 'animate-slide'
-                animationOptions = {{duration : 450} }>
+                animation = 'animate-push'
+                animationOptions = {{duration : 400} }>
 
             <a className="w3-bar-item w3-display-container"><h4>
                 Menu                

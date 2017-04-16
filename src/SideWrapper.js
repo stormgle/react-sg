@@ -135,13 +135,13 @@ class SideWrapper extends BaseComponent {
             // process animation
             style.display = 'block';
             if (validateAnimationName(sideBar.animation)) {
-              const anim = this._getAnimation(sideBar, 'forwards');
+              const anim = this._getSideBarAnimation(sideBar, 'forwards');
               Object.assign(style,anim);
             }
           } else if (sideBar.isClosing) {
             if (validateAnimationName(sideBar.animation)) {
               style.display = 'block'; // to let animation happen
-              const anim = this._getAnimation(sideBar, 'reverse');
+              const anim = this._getSideBarAnimation(sideBar, 'reverse');
               Object.assign(style,anim);
             } else {
               style.display = 'none';
@@ -185,6 +185,34 @@ class SideWrapper extends BaseComponent {
             style.marginRight = this.childrenProps.sideBar.width;
           } else {
             style.marginLeft = this.childrenProps.sideBar.width;
+          }        
+        }
+        /* apply animation */
+        if (!this._isCollapsed()) {
+          const sideBar = this.childrenProps.sideBar;
+          if (sideBar.isOpening) {
+            // process animation
+            if (validateAnimationName(sideBar.animation)) {
+              const anim = this._getSideContentAnimation(sideBar, 'forwards');
+              Object.assign(style,anim);
+            }
+          } else if (sideBar.isClosing) {
+            if (validateAnimationName(sideBar.animation)) {
+              const anim = this._getSideContentAnimation(sideBar, 'reverse');
+              Object.assign(style,anim);
+            }
+          } else {
+            /* we need to maintain the translated position after animation has
+               removed. */
+            if (/(push)|(pushpull)/i.test(sideBar.animation) && 
+                this._isSideBarOpen()) {
+              // apply translate depending on side bar side left or right &
+              // side bar width (in percentage)  
+              const screenWidth = this.state.width;
+              const minus = sideBar.side.toLowerCase() === 'right'? '-' : '';
+              const deviation = this.getSideBarWidthInPercentage(sideBar.width, screenWidth);
+              style.transform = `translateX(${minus}${deviation}%)`;
+            }   
           }        
         }
         /* process class */
@@ -246,6 +274,28 @@ class SideWrapper extends BaseComponent {
 
   }
 
+  getSideBarWidthInPercentage(barWidth, screenWidth) {
+    if (!barWidth) { return 0 }
+
+    if (util.isNumber(barWidth)) {
+      return parseInt((barWidth*100)/screenWidth);
+    }
+
+    if (util.isString(barWidth)) {
+      if (/^\d+px$/i.test(barWidth)) {
+        const barWidthInNumber = parseInt(barWidth.replace('px',''));
+        return parseInt((barWidthInNumber*100)/screenWidth);
+      }
+      if (/^\d+%$/i.test(barWidth)) {
+        return parseInt(barWidth.replace('%',''));;
+      }
+    }
+
+    /* wrong input type */
+    return 0;
+
+  }
+
   _isCollapseAuto() {
     const collapse = this.childrenProps.sideBar.collapse;
     return util.isString(collapse) && collapse.toLowerCase() === 'auto';
@@ -298,18 +348,62 @@ class SideWrapper extends BaseComponent {
     this.instance = el;
   }
 
-  _getAnimation(sideBar, direction) {
+  _getSideBarAnimation(sideBar, direction) {
 
     let animation = sideBar.animation.trim();
+
+    if (/pushpull/i.test(animation)) {
+      animation = animation.replace('pushpull','slide');
+    }
+
+    if (/push/i.test(animation)) {
+      animation = animation.replace('push','slide');
+    }
+
     if (!/(-left$)|(-right$)/i.test(animation)) {
       animation = `${animation}-${sideBar.side.toLowerCase()}`;
     }
+
     const animationOptions = {...sideBar.animationOptions};
     if (direction) {
       animationOptions.direction = direction;
     }   
 
     return createAnimStyle(animation, animationOptions);
+
+  }
+
+  _getSideContentAnimation(sideBar, direction) {
+
+    let animation = sideBar.animation.trim();
+
+    if (/slide/i.test(animation)) {
+      return null;
+    }
+
+    if (/pushpull/i.test(animation)) {
+      /* process later */
+    }
+
+    /* reach here, animation will be push */
+
+    if (!/(-left$)|(-right$)/i.test(animation)) {
+      animation = `${animation}-${sideBar.side.toLowerCase()}`;
+    }
+    const screenWidth = this.state.width;
+    const deviation = this.getSideBarWidthInPercentage(sideBar.width, screenWidth);
+    animation = `${animation}-${deviation}`;
+    
+    const animationOptions = {...sideBar.animationOptions};
+    if (direction) {
+      animationOptions.direction = direction;
+    }   
+
+    return createAnimStyle(animation, animationOptions);
+
+  }
+
+  _applyAnimationToStyle(style) {
 
   }
 

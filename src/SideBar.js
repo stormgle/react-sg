@@ -18,6 +18,7 @@ class SideBar extends BaseComponent {
    * @param {Boolean}         isOpen - true to show the component
    * @param {Function}        onClickOutside - callback function to call when click outside sidebar
    * @param {String}          backgroundColor - background color of side bar, also support w3 color class name
+   * @param {Boolean}         border
    * @param {Boolean}         overlay - lock the splitter content by a mask
    * @param {Function}        onOpen - Call when the Spliter side is opened 
    * @param {Function}        onPreOpen - Call before opening the Spliter side 
