@@ -34,7 +34,8 @@ class SideWrapper extends BaseComponent {
               '_isSideBarOpen', '_onClickOutsideSideBar',
               '_getInstance', 'getWidthReactively',
               'onAnimationEnd', 'onSideBarPropsChange',
-              '_applyAnimationToSideBar', '_applyAnimationToSideContent'
+              '_applyAnimationToSideBar', '_applyAnimationToSideContent',
+              '_lockSideContentDuringAnimation'
     );
 
   }
@@ -179,6 +180,7 @@ class SideWrapper extends BaseComponent {
         }
         /* apply animation */
         this._applyAnimationToSideContent(style);
+        this._lockSideContentDuringAnimation(style);    
         /* process class */
         const w3class = this._isCollapseAuto() ? 'w3-main' : '';
         return React.cloneElement(child, {
@@ -428,6 +430,13 @@ class SideWrapper extends BaseComponent {
           style.transform = `translateX(${minus}${deviation}%)`;
         }   
       }        
+    }
+  }
+
+  _lockSideContentDuringAnimation(style) {
+    const sideBar = this.childrenProps.sideBar;
+    if (sideBar.isOpening || sideBar.isClosing) {
+      style.pointerEvents = 'none';
     }
   }
 
