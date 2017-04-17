@@ -1,5 +1,6 @@
 
 @import 'animation-slide.css';
+@import 'animation-slide-fading.css';
 @import 'animation-push.css';
 
 @-webkit-keyframes slide-left {

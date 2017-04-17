@@ -6,7 +6,7 @@ import BaseComponent from './BaseComponent'
 
 import util from './lib/util'
 import log from './lib/log'
-import { createAnimStyle } from './lib/animation'
+import { ANIMATION, createAnimStyle, validateAnimationName } from './lib/animation'
 
 let uKey = 0;
 
@@ -125,21 +125,17 @@ class Navigator extends BaseComponent {
   }
   
   _push(route, options = {}, onFinish) {
+    console.log(route)
     // add new route with animation
     const anim = options.animation || this.props.animation || 'none'; 
-    const animOptions = options.animationOptions || this.props.animationOptions || null;
-    let animation = null;   
-    let to = 0;
-    if (anim && anim !== 'none') { 
-      const _animOptions = {...animOptions};   
-      _animOptions.direction = 'reverse';
-      _animOptions.duration = _animOptions.duration || 250;
-      animation = createAnimStyle(anim, _animOptions);      
-      to = _animOptions.duration + 50;      
-    }      
+    const animOptions = options.animationOptions || this.props.animationOptions || null;        
+    const {animation, to} =  this._genPushAnimationForTopRoute(anim, animOptions);    
+   
     const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
     routeStack[routeStack.length-2].lock = true;
+
     this.setState({ routeStack });    
+
     // clear animation after duration
     setTimeout(() => {
       routeStack[routeStack.length-1].animation = null;
@@ -154,15 +150,14 @@ class Navigator extends BaseComponent {
       // add animation for page pop out of screen
       const anim = options.animation || this.props.animation || 'none';
       const animOptions = options.animationOptions || this.props.animationOptions || null;
-      let to = 0;
-      if (anim && anim !== 'none') {
-        const _animOptions = {...animOptions}; 
-        _animOptions.duration = _animOptions.duration || 250;
+      const {animation, to} = this._genPopAnimationForTopRoute(anim, animOptions);
+
+      if (animation !== null) {
         const routeStack = this.state.routeStack;
-        routeStack[routeStack.length-1].animation = createAnimStyle(anim, _animOptions);
-        to = _animOptions.duration + 50;
+        routeStack[routeStack.length-1].animation = animation;
         this.setState({ routeStack });
-      }      
+      }
+    
       // actual pop out route from stack 
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
@@ -254,6 +249,51 @@ class Navigator extends BaseComponent {
       routeStack = this._pushToRouteStack(this.props.initialRoute, routeStack);      
     } 
     return routeStack;
+  }
+
+  _genPushAnimationForTopRoute(anim, animOptions) {
+
+    if (/push/i.test(anim)) {
+      anim = anim.replace('push','slide');
+    }
+
+    if (validateAnimationName(anim)) { 
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'forwards';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return { 
+        animation: createAnimStyle(anim, _animOptions),
+        to: _animOptions.duration + 50
+      };      
+    } else {
+      return {
+        animation: null,
+        to: 0
+      };
+    } 
+  }
+
+  _genPopAnimationForTopRoute(anim, animOptions) {
+
+    if (/push/i.test(anim)) {
+      anim = anim.replace('push','slide');
+    }
+
+    if (validateAnimationName(anim)) { 
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'reverse';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return { 
+        animation: createAnimStyle(anim, _animOptions),
+        to: _animOptions.duration + 50
+      };      
+    } else {
+      return {
+        animation: null,
+        to: 0
+      };
+    } 
+
   }
 
 }

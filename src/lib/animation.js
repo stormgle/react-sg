@@ -4,33 +4,43 @@ import log from './log'
 import util from './util'
 
 const animationList = [
-  'animate-slide', 'animate-slide-left', 'animate-slide-right',
-  'animate-push', 'animate-push-left', 'animation-push-right',
+  /* animation slide */
+  'animate-slide', 
+  'animate-slide-left', 
+  'animate-slide-right', 
+  'animate-slide-top', 
+  'animate-slide-bottom',
+  /* animation slide fading */
+  'animate-slide-fading', 
+  'animate-slide-fading-left', 
+  'animate-slide-fading-right', 
+  'animate-slide-fading-top', 
+  'animate-slide-fading-bottom',
+  /* animation push */
+  'animate-push', 
+  'animate-push-left', 
+  'animation-push-right',
+  'animate-push-top', 
+  'animation-push-bottom',
 ];
+
+export const ANIMATION = {
+  DEFAULT: {
+    DURATION: 450,
+    TIMING: 'ease',
+    DELAY: 0,
+    ITERATION: 1,
+    DIRECTION: 'forwards'
+  }
+};
 
 export function createAnimStyle(name = '', options = {}) {
 
-  /* validation code here will be replace by validateAnimationName function later */
-  if (name === undefined || name === null || name.length === 0) {
-    log.error({
-      root : 'Animation', 
-      message : 'Missing animation name',
-      detail : 'An animation name must be specified to use animation'
-    });
-  }
-  if (!util.isString(name)) {
-    log.error({
-      root : 'Animation', 
-      message : 'Invalid animation name',
-      detail : 'Animation name must be String'
-    });
-  }
-
-  let duration = options.duration || 2000;
-  let timing = options.timing || 'ease';
-  let delay = options.delay || 0;
-  let iteration = options.iteration || 1;
-  let direction = options.direction || 'forwards';
+  let duration = options.duration || ANIMATION.DEFAULT.DURATION;
+  let timing = options.timing || ANIMATION.DEFAULT.TIMING;
+  let delay = options.delay || ANIMATION.DEFAULT.DELAY;
+  let iteration = options.iteration || ANIMATION.DEFAULT.ITERATION;
+  let direction = options.direction || ANIMATION.DEFAULT.DIRECTION;
 
   if (!util.isNumber(duration) || duration < 0) {
     log.error({

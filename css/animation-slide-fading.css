@@ -1,71 +1,91 @@
 /* animation: slide from left */
-@-webkit-keyframes animate-slide-left {
+@-webkit-keyframes animate-slide-fading-left {
   from {
     transform: translateX(-100%);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
-@keyframes animate-slide-left {
+@keyframes animate-slide-fading-left {
   from {
     transform: translateX(-100%);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
 /* animation: slide from right */
-@-webkit-keyframes animate-slide-right {
+@-webkit-keyframes animate-slide-fading-right {
   from {
     transform: translateX(100%);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
-@keyframes animate-slide-right {
+@keyframes animate-slide-fading-right {
   from {
     transform: translateX(100%);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
 /* animation: slide from top */
-@-webkit-keyframes animate-slide-top {
+@-webkit-keyframes animate-slide-fading-top {
   from {
     transform: translateY(-100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
-@keyframes animate-slide-top {
+@keyframes animate-slide-fading-top {
   from {
     transform: translateY(-100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
 /* animation: slide from top */
-@-webkit-keyframes animate-slide-bottom {
+@-webkit-keyframes animate-slide-fading-bottom {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
-@keyframes animate-slide-bottom {
+@keyframes animate-slide-fading-bottom {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
+
+
+
+
