@@ -31,7 +31,8 @@ class App extends Component {
                 onClickOutside = {this.closeSidebar.bind(this)}
                 backgroundColor = 'w3-blue-grey'
                 border = {true}
-                animation = 'animate-push'
+                card = 'card-4'
+                animation = 'animate-slide'
                 animationOptions = {{duration : 400} }
                 onPreOpen = {() => console.log('sideBar pre-open')}
                 onOpen = {() => console.log('sideBar opened')}

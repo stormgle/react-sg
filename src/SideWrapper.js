@@ -90,6 +90,7 @@ class SideWrapper extends BaseComponent {
           onClickOutside: child.props.onClickOutside || null,
           backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR,
           border: child.props.border || false,
+          card: child.props.card || '',
           animation: child.props.animation || 'none',
           animationOptions: child.props.animationOptions || {},
           onPreOpen: child.props.onPreOpen || function(){},
@@ -152,6 +153,8 @@ class SideWrapper extends BaseComponent {
         if (sideBar.border) {
           w3class = `${w3class} w3-border`;
         }
+        /* card */
+        w3class = `${w3class} w3-${sideBar.card}`;
         return React.cloneElement(child, {
           style, 
           w3class, 
