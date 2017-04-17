@@ -125,7 +125,6 @@ class Navigator extends BaseComponent {
   }
   
   _push(route, options = {}, onFinish) {
-    console.log(route)
     // add new route with animation
     const anim = options.animation || this.props.animation || 'none'; 
     const animOptions = options.animationOptions || this.props.animationOptions || null;        
@@ -133,6 +132,7 @@ class Navigator extends BaseComponent {
    
     const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
     routeStack[routeStack.length-2].lock = true;
+    routeStack[routeStack.length-1].lock = false;
 
     this.setState({ routeStack });    
 
@@ -226,9 +226,7 @@ class Navigator extends BaseComponent {
       uKey++;
       routeStack.push({ _$key : uKey, lock : true, route, ...options })
     });
-    if (routeStack.length > 0) {
-      routeStack[routeStack.length-1].lock = false;
-    }    
+        
     return routeStack;
   }
 
@@ -248,6 +246,10 @@ class Navigator extends BaseComponent {
     if (this.props.initialRoute) {
       routeStack = this._pushToRouteStack(this.props.initialRoute, routeStack);      
     } 
+    /* unlock only top route */
+    if (routeStack.length > 0) {
+      routeStack[routeStack.length-1].lock = false;
+    }
     return routeStack;
   }
 
