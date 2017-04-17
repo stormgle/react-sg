@@ -1,6 +1,7 @@
 "use strict"
 
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import BaseComponent from './BaseComponent'
 
@@ -75,10 +76,10 @@ class SideBar extends BaseComponent {
 }
 
 SideBar.propTypes = {
-  side : React.PropTypes.oneOf(['left', 'right']),
-  width : React.PropTypes.oneOfType([
-    React.PropTypes.string, 
-    React.PropTypes.number
+  side : PropTypes.oneOf(['left', 'right']),
+  width : PropTypes.oneOfType([
+    PropTypes.string, 
+    PropTypes.number
   ])
 };
 
