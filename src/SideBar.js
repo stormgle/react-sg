@@ -86,7 +86,22 @@ SideBar.propTypes = {
     PropTypes.string, 
     PropTypes.number
   ]),
-  border: PropTypes.bool
+  collapse: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+  ]),
+  onClickOutside: PropTypes.func,
+  backgroundColor: PropTypes.string,
+  isOpen: PropTypes.bool,
+  border: PropTypes.bool,
+  card: PropTypes.string,
+  overlay: PropTypes.bool,
+  onPreOpen: PropTypes.func,
+  onOpen: PropTypes.func,
+  onPreClose: PropTypes.func,
+  onClose: PropTypes.func,
+  animation: PropTypes.string,
+  animationOptions: PropTypes.object,
 };
 
 SideBar.sgType = 'side-bar';
