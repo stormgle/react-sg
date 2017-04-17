@@ -30,6 +30,7 @@ class App extends Component {
                 overlay = {false}
                 onClickOutside = {this.closeSidebar.bind(this)}
                 backgroundColor = 'w3-blue-grey'
+                border = {true}
                 animation = 'animate-push'
                 animationOptions = {{duration : 400} }
                 onPreOpen = {() => console.log('sideBar pre-open')}

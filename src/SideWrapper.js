@@ -11,7 +11,7 @@ import log from './lib/log'
 import BaseComponent from './BaseComponent'
 
 const DEFAULT_SIDE_WIDTH = '250px';
-const DEFAULT_BACKGROUND_COLOR = 'w3-light-grey';
+const DEFAULT_BACKGROUND_COLOR = 'w3-blue-grey';
 
 /**
  * SideWrapper Component
@@ -89,6 +89,7 @@ class SideWrapper extends BaseComponent {
           isOpen: child.props.isOpen || false,
           onClickOutside: child.props.onClickOutside || null,
           backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR,
+          border: child.props.border || false,
           animation: child.props.animation || 'none',
           animationOptions: child.props.animationOptions || {},
           onPreOpen: child.props.onPreOpen || function(){},
@@ -146,6 +147,10 @@ class SideWrapper extends BaseComponent {
           w3class = `${w3class} ${backgroundColor}`;
         } else {
           style.backgroundColor = backgroundColor;
+        }
+        /* border */
+        if (sideBar.border) {
+          w3class = `${w3class} w3-border`;
         }
         return React.cloneElement(child, {
           style, 
