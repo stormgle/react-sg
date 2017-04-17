@@ -33,7 +33,7 @@ class SideWrapper extends BaseComponent {
               '_isCollapseAuto', '_isCollapseTrue', '_isCollapsed',
               '_isSideBarOpen', '_onClickOutsideSideBar',
               '_getInstance', 'getWidthReactively',
-              'onAnimationEnd', 
+              'onAnimationEnd', 'onSideBarPropsChange',
               '_applyAnimationToSideBar', '_applyAnimationToSideContent'
     );
 
@@ -46,10 +46,6 @@ class SideWrapper extends BaseComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.getWidthReactively, false);
-  }
-
-  componentWillReceiveProps(nextProps) {
-
   }
 
   render() {
@@ -95,6 +91,10 @@ class SideWrapper extends BaseComponent {
           backgroundColor: child.props.backgroundColor || DEFAULT_BACKGROUND_COLOR,
           animation: child.props.animation || 'none',
           animationOptions: child.props.animationOptions || {},
+          onPreOpen: child.props.onPreOpen || function(){},
+          onOpen: child.props.onOpen || function(){},
+          onPreClose: child.props.onPreClose || function(){},
+          onClose: child.props.onClose || function(){}
         };
       }
       if (child.type && child.type.sgType === 'side-content') {
@@ -147,7 +147,12 @@ class SideWrapper extends BaseComponent {
         } else {
           style.backgroundColor = backgroundColor;
         }
-        return React.cloneElement(child, {style, w3class, onAnimationEnd: this.onAnimationEnd});
+        return React.cloneElement(child, {
+          style, 
+          w3class, 
+          onAnimationEnd: this.onAnimationEnd,
+          onSideBarPropsChange: this.onSideBarPropsChange,
+        });
       }
 
       if (child.type && child.type.sgType === 'side-content') {
@@ -168,7 +173,11 @@ class SideWrapper extends BaseComponent {
         this._applyAnimationToSideContent(style);
         /* process class */
         const w3class = this._isCollapseAuto() ? 'w3-main' : '';
-        return React.cloneElement(child, {style, w3class, onClick : this._onClickOutsideSideBar});
+        return React.cloneElement(child, {
+          style, 
+          w3class, 
+          onClick : this._onClickOutsideSideBar
+        });
       }      
     });
 
@@ -416,7 +425,27 @@ class SideWrapper extends BaseComponent {
 
   onAnimationEnd() {
     // forced re-render to update display after animation finished
-    this.setState({})
+    this.setState({});
+    /* invode sideBar onOpen/onClose callback */
+    const sideBar = this.childrenProps.sideBar;
+    if (this._isSideBarOpen()) {
+      sideBar.onOpen();
+    } else {
+      sideBar.onClose();
+    }
+
+  }
+
+  onSideBarPropsChange(oldProps, newProps) {
+    /*  invoke sideBar preOpen/preClose callback before render */
+    const sideBar = this.childrenProps.sideBar;
+    if (!oldProps.isOpen && newProps.isOpen) {
+      sideBar.onPreOpen();
+    }
+    if (oldProps.isOpen && !newProps.isOpen) {
+      sideBar.onPreClose();
+    }
+
   }
 
 }

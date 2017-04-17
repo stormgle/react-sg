@@ -51,6 +51,10 @@ class SideBar extends BaseComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.props.onSideBarPropsChange(this.props, nextProps);
+  }
+
   render() {
     const style = this.props.style;
     const w3class = this.props.w3class;

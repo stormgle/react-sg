@@ -31,7 +31,11 @@ class App extends Component {
                 onClickOutside = {this.closeSidebar.bind(this)}
                 backgroundColor = 'w3-blue-grey'
                 animation = 'animate-push'
-                animationOptions = {{duration : 400} }>
+                animationOptions = {{duration : 400} }
+                onPreOpen = {() => console.log('sideBar pre-open')}
+                onOpen = {() => console.log('sideBar opened')}
+                onPreClose= {() => console.log('sideBar pre-close')}
+                onClose= {() => console.log('sideBar closed')} >
 
             <a className="w3-bar-item w3-display-container"><h4>
                 Menu                
