@@ -128,16 +128,21 @@ class Navigator extends BaseComponent {
     // add new route with animation
     const anim = options.animation || this.props.animation || 'none'; 
     const animOptions = options.animationOptions || this.props.animationOptions || null;        
-    const {animation, to} =  this._genPushAnimationForTopRoute(anim, animOptions);    
-   
-    const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});
-    routeStack[routeStack.length-2].lock = true;
+    const {animation, to} =  this._genPushAnimationForTopRoute(anim, animOptions);        
+
+    const routeStack = this._pushToRouteStack(route, this.state.routeStack, {animation});        
     routeStack[routeStack.length-1].lock = false;
+
+    // for current route, apply animation if animation push is used, also lock it
+    const animation2 = this._genPushAnimationForSecondRoute(anim, animOptions);
+    routeStack[routeStack.length-2].animation = animation2;
+    routeStack[routeStack.length-2].lock = true;
 
     this.setState({ routeStack });    
 
     // clear animation after duration
     setTimeout(() => {
+      routeStack[routeStack.length-2].animation = null;
       routeStack[routeStack.length-1].animation = null;
       this.setState({ routeStack });
       onFinish();
@@ -155,12 +160,17 @@ class Navigator extends BaseComponent {
       if (animation !== null) {
         const routeStack = this.state.routeStack;
         routeStack[routeStack.length-1].animation = animation;
+        const animation2 = this._genPopAnimationForSecondRoute(anim, animOptions);
+        routeStack[routeStack.length-2].animation = animation2;
+        // apply animation to behind route if animation push is used
+
         this.setState({ routeStack });
       }
     
       // actual pop out route from stack 
       setTimeout(() => {
         const routeStack = this._popFromRouteStack(this.state.routeStack);
+        routeStack[routeStack.length-1].animation = null;
         routeStack[routeStack.length-1].lock = false;
         this.setState({ routeStack });
         onFinish();
@@ -256,7 +266,7 @@ class Navigator extends BaseComponent {
   _genPushAnimationForTopRoute(anim, animOptions) {
 
     if (/push/i.test(anim)) {
-      anim = anim.replace('push','slide');
+      anim = anim.replace('push','slide');      
     }
 
     if (validateAnimationName(anim)) { 
@@ -268,10 +278,23 @@ class Navigator extends BaseComponent {
         to: _animOptions.duration + 50
       };      
     } else {
-      return {
-        animation: null,
-        to: 0
-      };
+      return { animation: null, to: 0 };
+    } 
+  }
+
+  _genPushAnimationForSecondRoute(anim, animOptions) {
+    if (!/push/i.test(anim)) {
+      return null;
+    }
+
+    if (validateAnimationName(anim)) { 
+      anim = `${anim}-100`;
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'forwards';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return createAnimStyle(anim, _animOptions);      
+    } else {
+      return null;
     } 
   }
 
@@ -290,14 +313,28 @@ class Navigator extends BaseComponent {
         to: _animOptions.duration + 50
       };      
     } else {
-      return {
-        animation: null,
-        to: 0
-      };
+      return { animation: null, to: 0 };
     } 
 
   }
 
+  _genPopAnimationForSecondRoute(anim, animOptions) {
+
+    if (!/push/i.test(anim)) {
+      return null;
+    }
+
+    if (validateAnimationName(anim)) { 
+      anim = `${anim}-100`;
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'reverse';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return createAnimStyle(anim, _animOptions);      
+    } else {
+      return null;
+    } 
+
+  }
 }
 
 Navigator.sgType = 'navigator';

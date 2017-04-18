@@ -19,9 +19,9 @@ const animationList = [
   /* animation push */
   'animate-push', 
   'animate-push-left', 
-  'animation-push-right',
+  'animate-push-right',
   'animate-push-top', 
-  'animation-push-bottom',
+  'animate-push-bottom',
 ];
 
 export const ANIMATION = {

@@ -85,7 +85,7 @@ class Demo extends Component {
 				initialRouteStack = {[ {id :0, name : 'PAGE 0'}, {id :1, name : 'PAGE 1'} ]}
 				initialRoute = {{id :2, name : 'PAGE 2'}}
 				renderRoute = {this.renderRoute.bind(this)}
-				animation = 'animate-slide-right'
+				animation = 'animate-push-right'
 				animationOptions = {{duration : 5000}}
 				onPrePush = {(route) => console.log(`${route.name} : push a page`) }
 				onPostPush = {() => console.log(`push finish`)}
