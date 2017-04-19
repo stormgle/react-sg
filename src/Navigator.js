@@ -318,7 +318,7 @@ class Navigator extends BaseComponent {
       _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
       return { 
         animation: createAnimStyle(anim, _animOptions),
-        to: _animOptions.duration + 50
+        to: _animOptions.duration + 0
       };      
     } else {
       return { animation: null, to: 0 };
