@@ -32,7 +32,7 @@ class App extends Component {
                 backgroundColor = 'w3-blue-grey'
                 border = {true}
                 card = 'card-4'
-                animation = 'animate-push'
+                animation = 'push'
                 animationOptions = {{duration : 400} }
                 onPreOpen = {() => console.log('sideBar pre-open')}
                 onOpen = {() => console.log('sideBar opened')}
