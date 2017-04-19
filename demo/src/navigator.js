@@ -26,7 +26,7 @@ class Demo extends Component {
 		console.log('render route')
 		function nextPage() {
 			if (route.id === 1) {
-				nav.push({ id: 2, name : 'PAGE 2'}, {animation : 'animate-slide-bottom', onPrePush : route => console.log('SPECIAL PUSH')});
+				nav.push({ id: 2, name : 'PAGE 2'}, {animation : 'slide-bottom', onPrePush : route => console.log('SPECIAL PUSH')});
 			} else if (route.id === 2) {
 				nav.push({ id: 3, name : 'PAGE 3'}, {animation : 'none'});
 			} else {
@@ -35,7 +35,7 @@ class Demo extends Component {
 		}
 		function previousPage() {
 			if (route.id === 2) {
-				nav.pop({animation :'animate-slide-bottom', onPrePop : route => console.log('SPECIAL POP')});
+				nav.pop({animation :'slide-bottom', onPrePop : route => console.log('SPECIAL POP')});
 			} else if (route.id === 3) {
 				nav.pop({animation : 'none'});
 			} else {
@@ -43,9 +43,9 @@ class Demo extends Component {
 			}
 		}
 		function resetStack() {
-			//nav.reset([{id: 0, name : 'PAGE 0'}],{animation :'slide-bottom'});
-			//nav.reset([{id: 0, name : 'PAGE 0'}]);
-			nav.reset();
+			nav.reset([{id: 0, name : 'PAGE 0'},{id: 1, name : 'PAGE 1'}],{animation :'slide-bottom'});
+			// nav.reset([{id: 0, name : 'PAGE 0'}]);
+			// nav.reset();
 		}
 		function showPageInfo() {
 			console.log(nav.getCurrentRoute());
@@ -85,8 +85,8 @@ class Demo extends Component {
 				initialRouteStack = {[ {id :0, name : 'PAGE 0'}, {id :1, name : 'PAGE 1'} ]}
 				initialRoute = {{id :2, name : 'PAGE 2'}}
 				renderRoute = {this.renderRoute.bind(this)}
-				animation = 'animate-push-right'
-				animationOptions = {{duration : 5000}}
+				animation = 'slide-fading-right'
+				animationOptions = {{duration : 400}}
 				onPrePush = {(route) => console.log(`${route.name} : push a page`) }
 				onPostPush = {() => console.log(`push finish`)}
 				onPrePop = {(route) => console.log(`${route.name} : pop back`) }

@@ -5,23 +5,23 @@ import util from './util'
 
 const animationList = [
   /* animation slide */
-  'animate-slide', 
-  'animate-slide-left', 
-  'animate-slide-right', 
-  'animate-slide-top', 
-  'animate-slide-bottom',
+  'slide', 
+  'slide-left', 
+  'slide-right', 
+  'slide-top', 
+  'slide-bottom',
   /* animation slide fading */
-  'animate-slide-fading', 
-  'animate-slide-fading-left', 
-  'animate-slide-fading-right', 
-  'animate-slide-fading-top', 
-  'animate-slide-fading-bottom',
+  'slide-fading', 
+  'slide-fading-left', 
+  'slide-fading-right', 
+  'slide-fading-top', 
+  'slide-fading-bottom',
   /* animation push */
-  'animate-push', 
-  'animate-push-left', 
-  'animate-push-right',
-  'animate-push-top', 
-  'animate-push-bottom',
+  'push', 
+  'push-left', 
+  'push-right',
+  'push-top', 
+  'push-bottom',
 ];
 
 export const ANIMATION = {
@@ -55,7 +55,7 @@ export function createAnimStyle(name = '', options = {}) {
   delay = util.isNumber(delay) && delay > 0 ? `${delay/1000}s` : '';
   iteration = (util.isNumber(iteration) && iteration > 0) || iteration === 'infinite' ? iteration : '';
 
-  const animation = `${name} ${duration} ${timing} ${delay} ${iteration} ${direction}`
+  const animation = `animate-${name} ${duration} ${timing} ${delay} ${iteration} ${direction}`
     .trim().replace(/ +/g,' ');
 
   return {
@@ -88,12 +88,12 @@ export function validateAnimationName(name) {
   }
   /* check with the valid name list */
   if (animationList.indexOf(name) === -1) {
-    let detail = 'Animation name must be one of the following:\n[';
-    animationList.forEach(n => detail = `${detail} ${n}`);
-    detail = `${detail}]`
+    let detail = 'Please use one of the following animation:\n[';
+    animationList.forEach(n => detail = `${detail}${n}, `);
+    detail = `${detail.trim().replace(/,$/,'')}]`;
     log.error({
       root : 'Animation', 
-      message : 'Invalid animation name',
+      message : `Animation [${name}] is NOT supported`,
       detail
     });
     return false;
