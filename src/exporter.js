@@ -3,6 +3,7 @@
 import React from 'react'
 
 export { default as BaseComponent } from './BaseComponent'
+export { default as TouchArea } from './TouchArea'
 export { default as Page } from './Page'
 export { default as Navigator } from './Navigator'
 export { default as Splitter } from './Splitter'
