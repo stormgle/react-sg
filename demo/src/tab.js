@@ -13,7 +13,7 @@ import Tab from  '../../dist/Tab'
 const tabs = [
   {label: 'Tab 1', content: <h4> Tab 1, but index 0 </h4>},
   {label: 'Tab 2', content: <h4> I am Tab 2 </h4>},
-  {label: 'Tab 3', content: <h4> The last Tab in Demonstration </h4>, side: 'right'},
+  {label: 'Tab 3', content: <h4> The last Tab in Demonstration </h4>},
 ];
 
 class App extends Component {
@@ -31,7 +31,8 @@ class App extends Component {
              border = {true}
              barColor = 'w3-black'
              activeTabColor = 'w3-red'
-             position = 'top' />
+             position = 'top'
+             align = 'right' />
       </Page>
     )
   }

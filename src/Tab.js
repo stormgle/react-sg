@@ -17,6 +17,7 @@ class Tab extends BaseComponent {
    * @param {Array}           data - define tabs for render. Each item is an object {label, content, side, show}
    * @param {Number}          initialTabIndex - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
+   * @param {String}          align - align tab left, right or center
    * @param {Boolean}         border - a border around tab 
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
@@ -91,32 +92,57 @@ class Tab extends BaseComponent {
     /* get active tab color */
     const activeTabColor = this.props.activeTabColor || ACTIVE_TAB_COLOR;
     
-
+    /* align tab bar left, right, center */
+    const wrapStyle = {
+      float: 'none',
+      left: '0',
+      position: 'relative',
+      textAlign: 'left'
+    };
+    const childStyle = {
+      left: '0',
+      position: 'relative'
+    };
+    if (this.props.align) {
+      if (this.props.align.toLowerCase() === 'center') {
+        wrapStyle.float = 'right';
+        wrapStyle.left = '-50%';
+        childStyle.left = '50%';
+      } else if (this.props.align.toLowerCase() === 'right') {
+        wrapStyle.float = 'right';
+        wrapStyle.left = '0';
+        childStyle.left = '0';
+      }
+    }
     return (
       <div className = {w3class} style = {style} >
-        {tabs.map((tab, index) => {          
-          let btnClass = 'w3-bar-item w3-button';
-          const btnStyle = {};
-          /* apply active tab color if active */
-          if (index === this.state.index) {
-            if (/^w3-/.test(activeTabColor)) {
-              btnClass = `${btnClass} ${activeTabColor}`;
-            } else {
-              btnStyle.backgroundColor = activeTabColor;
-            }
-          }
-          /* align button to right if specified */
-          if (tab.side && tab.side.toLowerCase() === 'right') {
-            btnClass = `${btnClass} w3-right`;
-          }
-          return (
-            <button key = {index} 
-                    className = {btnClass} style = {btnStyle}
-                    onClick = {() => this.setActiveTab(index)} >
-              {tab.label}
-            </button>
-          );
-        })}
+        <div style = {wrapStyle}>
+          <div style = {childStyle} >
+            {tabs.map((tab, index) => {          
+              let btnClass = 'w3-bar-item w3-button';
+              const btnStyle = {};
+              /* apply active tab color if active */
+              if (index === this.state.index) {
+                if (/^w3-/.test(activeTabColor)) {
+                  btnClass = `${btnClass} ${activeTabColor}`;
+                } else {
+                  btnStyle.backgroundColor = activeTabColor;
+                }
+              }
+              /* align button to right if specified, only effective if tab align is left */
+              if (tab.side && tab.side.toLowerCase() === 'right') {
+                btnClass = `${btnClass} w3-right`;
+              }
+              return (
+                <button key = {index} 
+                        className = {btnClass} style = {btnStyle}
+                        onClick = {() => this.setActiveTab(index)} >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     );
   }
