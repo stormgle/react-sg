@@ -1,6 +1,7 @@
 "use strict"
 
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import util from './lib/util'
 import log from './lib/log'
@@ -13,10 +14,9 @@ class Tab extends BaseComponent {
 
   /**
    * Render a Tabs  
-   * @param {Array}           data - define tabs for render. Each item is an object {label, content, show}
+   * @param {Array}           data - define tabs for render. Each item is an object {label, content, side, show}
    * @param {Number}          initialTabIndex - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
-   * @param {String}          align - align tab label as Left, Right, Center or Justify
    * @param {Boolean}         border - a border around tab 
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
@@ -93,16 +93,20 @@ class Tab extends BaseComponent {
 
     return (
       <div className = {w3class} style = {style} >
-        {tabs.map((tab, index) => {
-          /* apply active tab color if active */
+        {tabs.map((tab, index) => {          
           let btnClass = 'w3-bar-item w3-button';
           const btnStyle = {};
+          /* apply active tab color if active */
           if (index === this.state.index) {
             if (/^w3-/.test(activeTabColor)) {
               btnClass = `${btnClass} ${activeTabColor}`;
             } else {
               btnStyle.backgroundColor = activeTabColor;
             }
+          }
+          /* align button to right if specified */
+          if (tab.side && tab.side.toLowerCase() === 'right') {
+            btnClass = `${btnClass} w3-right`;
           }
           return (
             <button key = {index} 
@@ -134,16 +138,40 @@ class Tab extends BaseComponent {
 
   render() {
     const _class = this.props.border ? 'w3-border' : '';
+
+    let TopComponent = null;
+    let BottomComponent = null;
+    if (this.props.position && this.props.position.toLowerCase() === 'bottom') {
+      // render tabbar at top
+      TopComponent = this.renderTabContent();
+      BottomComponent = this.renderTabBar();
+    } else {
+      // render tabbar at bottom
+      TopComponent = this.renderTabBar();
+      BottomComponent = this.renderTabContent();
+      
+    }
+
     return (
       <sg-tabs>
         <div className = {_class} >
-          {this.renderTabBar()}
-          {this.renderTabContent()}
+          {TopComponent}
+          {BottomComponent}
         </div>
       </sg-tabs>
     );
   }
 
+}
+
+Tab.PropTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  initialTabIndex: PropTypes.number,
+  position: PropTypes.oneOf(['top', 'bottom']),
+
+  border: PropTypes.bool,
+  barColor: PropTypes.string,
+  activeTabColor: PropTypes.string
 }
 
 Tab.sgType = 'tab';
