@@ -71,6 +71,7 @@ class Tab extends BaseComponent {
   }
 
   setActiveTab(index) {
+    if (index === this.state.index) { return }
     this.setState ({ index });
   }
 
