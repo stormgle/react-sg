@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
-import '../../css/w3.css'
+import '../../css/third_parties/w3.css'
 import '../../css/storm.css'
 import '../../css/animation.css'
 

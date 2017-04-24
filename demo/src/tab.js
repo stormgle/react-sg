@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
-import '../../css/w3.css'
+import '../../css/third_parties/w3.css'
 import '../../css/storm.css'
 import '../../css/animation.css'
 
@@ -13,7 +13,7 @@ import Tab from  '../../dist/Tab'
 const tabs = [
   {label: 'Tab 1', content: <h4> Tab 1, but index 0 </h4>},
   {label: 'Tab 2', content: <h4> I am Tab 2 </h4>},
-  {label: 'Tab 3', content: <h4> The last Tab in Demonstration </h4>},
+  {label: 'Tab 3', content: <h4> The last Tab in Demonstration </h4>, side: 'right'},
 ];
 
 class App extends Component {
@@ -30,7 +30,8 @@ class App extends Component {
              initialTabIndex = {1}
              border = {true}
              barColor = 'w3-black'
-             activeTabColor = 'w3-red' />
+             activeTabColor = 'w3-red'
+             position = 'top' />
       </Page>
     )
   }
