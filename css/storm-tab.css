@@ -1,0 +1,9 @@
+
+.tab-content-box {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.tab-content {
+  width: 100%;
+}

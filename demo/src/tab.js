@@ -51,7 +51,9 @@ class App extends Component {
              activeTabBorder = 'w3-border-bottom w3-border-black'
              contentBorder = 'w3-border-bottom w3-border-grey'
              position = 'top'
-             align = 'justify' />
+             align = 'justify'
+             animation = 'push'
+             animationOptions = {{duration: 1000}} />
       </Page>
     )
   }

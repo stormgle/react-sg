@@ -22,6 +22,10 @@ const animationList = [
   'push-right',
   'push-top', 
   'push-bottom',
+  /* animation fading */
+  'fade',
+  'fade-in',
+  'fade-out',
 ];
 
 export const ANIMATION = {

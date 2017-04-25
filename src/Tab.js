@@ -26,7 +26,7 @@ class Tab extends BaseComponent {
    * @param {String}          contentBorder - a border around tab content
    * @param {Function}        onPreChange - Call before changin tab
    * @param {Function}        onChange - Call after tab has been changed
-   * @param {String}          animation - define animation
+   * @param {String}          animation - define animation, support: slide, push
    * @param {Object}          animationOptions - define animation option 
    */
   constructor(props) {
@@ -37,13 +37,16 @@ class Tab extends BaseComponent {
       tabs: [],
       index: 0,
       lastIndex: 0,
+      enterAnimation: null,
+      exitAnimation: null,
     };
 
     this.instance = null
 
     this.bind(
       'renderTabBar', 'renderTabContent',
-      '_getInstance', 'getWidthReactively'
+      '_getInstance', 'getWidthReactively',
+      'createEnterAnimation', 'createExitAnimation',
     );
 
   }
@@ -92,8 +95,23 @@ class Tab extends BaseComponent {
 
   setActiveTab(index) {
     if (index === this.state.index) { return }
+
     const lastIndex = this.state.index;
-    this.setState ({ index, lastIndex });
+
+    const direction = lastIndex > index ? 'left' : 'right';
+    const enterAnimation = this.createEnterAnimation(0, direction);
+    const exitAnimation = this.createExitAnimation(0, direction);
+
+    this.setState ({ index, lastIndex, enterAnimation, exitAnimation });
+
+    // setTimeout(() => {
+    //   this.setState({ enterAnimation: null});
+    // }, enterAnimation.to);
+
+    // setTimeout(() => {
+    //   this.setState({ exitAnimation: null});
+    // }, exitAnimation.to);
+    
   }
 
   renderTabBar() {
@@ -192,7 +210,7 @@ class Tab extends BaseComponent {
 
   renderTabContent() {
     const tabs = this.state.tabs;
-    let baseClass = 'tab-content';
+    let baseClass = 'tab-content-box';
     /* get bar border */
     if (this.props.contentBorder) {
       const contentBorder = this.props.contentBorder;
@@ -202,14 +220,26 @@ class Tab extends BaseComponent {
         style.border = contentBorder;
       }
     }
-    const enterAnimation = this.createEnterAnimation();
-    const exitAnimation = this.createExitAnimation();
+
     return (
       <div className = {baseClass} >
         {tabs.map((tab, index) => {
-          const style = index === this.state.index? {display : 'block'} : {display : 'none'}
+          let style = index === this.state.index? {display : 'block'} : {display : 'none'};
+          if (index === this.state.index) {
+            if (this.state.enterAnimation) {
+              style = {...style, ...this.state.enterAnimation.animation};
+            }
+          }
+          if (index === this.state.lastIndex) {
+            if (this.state.exitAnimation) {
+              style = {...style, ...this.state.exitAnimation.animation};
+              style.display = 'block';
+              style.position = 'absolute';
+              style.top = 0;
+            }
+          }
           return (
-            <div key= {index} style = {style} >
+            <div className = 'tab-content' key= {index} style = {style} >
               {tab.content}
             </div>
           );
@@ -218,23 +248,62 @@ class Tab extends BaseComponent {
     );
   }
 
-  createEnterAnimation() {
-    const anim = this.props.animation;
+  createEnterAnimation(delay, direction) {
+    let anim = this.props.animation;
     const animOptions = this.props.animationOptions;
+    
     if (anim && validateAnimationName(anim)) {
+      
       if (/push/i.test(anim)) {
         anim = anim.replace('push','slide');      
       }
+      
+      anim = `${anim}-${direction}`;
+      
       const _animOptions = {...animOptions};   
       _animOptions.direction = 'forwards';
       _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
       return {
         animation: createAnimStyle(anim, _animOptions),
         to: _animOptions.duration
-      }
+      };
     } else {
       return { animation: null, to: 0 };
     }
+  }
+
+  createExitAnimation(delay, direction) {
+    let anim = this.props.animation;
+    const animOptions = this.props.animationOptions;
+
+    if (anim === undefined) {
+      return null;
+    }
+    
+    if (!/push/i.test(anim)) {
+      const _animOptions = {...animOptions};
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return {
+        animation: createAnimStyle('fade-out', _animOptions),
+        to: _animOptions.duration
+      };
+    }
+
+    if (anim && validateAnimationName(anim)) {
+      
+      anim = `${anim}-${direction}-100`;      
+
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'forwards';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return {
+        animation: createAnimStyle(anim, _animOptions),
+        to: _animOptions.duration
+      };
+    } else {
+      return null;
+    }
+
   }
 
   render() {
