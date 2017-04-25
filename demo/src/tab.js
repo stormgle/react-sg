@@ -50,7 +50,7 @@ class App extends Component {
              activeTabColor = 'w3-dark-grey'
              contentBorder = 'w3-border-bottom w3-border-grey'
              position = 'top'
-             align = 'left' />
+             align = 'justify' />
       </Page>
     )
   }

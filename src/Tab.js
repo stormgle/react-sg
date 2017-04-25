@@ -17,7 +17,7 @@ class Tab extends BaseComponent {
    * @param {Array}           data - define tabs for render. Each item is an object {label, content, side, show}
    * @param {Number}          initialTabIndex - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
-   * @param {String}          align - align tab left, right or center
+   * @param {String}          align - align tab left, right, center or justify
    * @param {Boolean}         barBorder - a border around tab bar
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
@@ -31,11 +31,17 @@ class Tab extends BaseComponent {
     super(props);
 
     this.state = {
+      width: null,
       tabs: [],
       index: 0
     };
 
-    this.bind('renderTabBar', 'renderTabContent');
+    this.instance = null
+
+    this.bind(
+      'renderTabBar', 'renderTabContent',
+      '_getInstance', 'getWidthReactively'
+    );
 
   }
 
@@ -43,6 +49,15 @@ class Tab extends BaseComponent {
     const index = this.props.initialTabIndex || 0;
     const tabs = this.getTabsData(this.props.data);
     this.setState({tabs, index});
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.getWidthReactively, false);
+    this.getWidthReactively();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.getWidthReactively, false);
   }
 
   /* validate data passing to Tab */
@@ -114,6 +129,7 @@ class Tab extends BaseComponent {
       left: '0',
       position: 'relative'
     };
+    let btnWidth = null;
     if (this.props.align) {
       if (this.props.align.toLowerCase() === 'center') {
         wrapStyle.float = 'right';
@@ -123,6 +139,10 @@ class Tab extends BaseComponent {
         wrapStyle.float = 'right';
         wrapStyle.left = '0';
         childStyle.left = '0';
+      } else if (this.props.align.toLowerCase() === 'justify') {
+        if (this.state.width) {
+          btnWidth = `${this.state.width / tabs.length}px`;
+        }
       }
     }
     return (
@@ -131,7 +151,7 @@ class Tab extends BaseComponent {
           <div style = {childStyle} >
             {tabs.map((tab, index) => {          
               let btnClass = 'w3-bar-item w3-button';
-              const btnStyle = {};
+              const btnStyle = {width: btnWidth};
               /* apply active tab color if active */
               if (index === this.state.index) {
                 if (/^w3-/.test(activeTabColor)) {
@@ -201,12 +221,26 @@ class Tab extends BaseComponent {
 
     return (
       <sg-tabs>
-        <div>
+        <div ref = {this._getInstance}>
           {TopComponent}
           {BottomComponent}
         </div>
       </sg-tabs>
     );
+  }
+
+  getWidthReactively() {
+    if (this.instance) {
+      /* only re-calculate width and do re-render if align justify */
+      if (this.props.align && this.props.align.toLowerCase() === 'justify') {
+        const width = parseInt(this.instance.clientWidth);
+        this.setState({ width });
+      }
+    }  
+  }
+
+  _getInstance(el) {
+    this.instance = el;
   }
 
 }
