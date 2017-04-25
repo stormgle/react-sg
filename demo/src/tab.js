@@ -10,11 +10,28 @@ import '../../css/animation.css'
 import Page from '../../dist/Page'
 import Tab from  '../../dist/Tab'
 
-const tabs = [
-  {label: 'Tab 1', content: <h4> Tab 1, but index 0 </h4>},
-  {label: 'Tab 2', content: <h4> I am Tab 2 </h4>},
-  {label: 'Tab 3', content: <h4> The last Tab in Demonstration </h4>},
-];
+const dict = {
+  Hanoi: 'Vietnam',
+  London: 'England',
+  Tokyo: 'Japan'
+};
+
+function renderCity(city) {
+  return {
+    label : city,
+    content: (
+      <div className = 'w3-container'>
+        <h3> {city} </h3>
+        <div>
+          {city} is the captital of {dict[city]}
+        </div>
+        <div style = {{marginTop: '30px'}} />
+      </div>
+    )
+  };
+} 
+
+const tabs = Object.keys(dict).map(city => renderCity(city));
 
 class App extends Component {
   constructor(props) {
@@ -28,11 +45,12 @@ class App extends Component {
         <h3> Tabs Demonstration </h3>
         <Tab data = {tabs}
              initialTabIndex = {1}
-             border = {true}
-             barColor = 'w3-black'
-             activeTabColor = 'w3-red'
+             barBorder = 'w3-border-bottom w3-border-grey'
+             barColor = 'w3-light-grey'
+             activeTabColor = 'w3-dark-grey'
+             contentBorder = 'w3-border-bottom w3-border-grey'
              position = 'top'
-             align = 'right' />
+             align = 'left' />
       </Page>
     )
   }

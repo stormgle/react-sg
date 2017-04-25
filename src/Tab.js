@@ -18,9 +18,10 @@ class Tab extends BaseComponent {
    * @param {Number}          initialTabIndex - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
    * @param {String}          align - align tab left, right or center
-   * @param {Boolean}         border - a border around tab 
+   * @param {Boolean}         barBorder - a border around tab bar
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
+   * @param {String}          contentBorder - a border around tab content
    * @param {Function}        onPreChange - Call before changin tab
    * @param {Function}        onChange - Call after tab has been changed
    * @param {String}          animation - define animation
@@ -89,6 +90,16 @@ class Tab extends BaseComponent {
       style.backgroundColor = barColor;
     }
 
+    /* get bar border */
+    if (this.props.barBorder) {
+      const barBorder = this.props.barBorder;
+      if (/^w3-/.test(barBorder)) {
+        w3class = `${w3class} ${barBorder}`;
+      } else {
+        style.border = barBorder;
+      }
+    }
+
     /* get active tab color */
     const activeTabColor = this.props.activeTabColor || ACTIVE_TAB_COLOR;
     
@@ -149,8 +160,18 @@ class Tab extends BaseComponent {
 
   renderTabContent() {
     const tabs = this.state.tabs;
+    let baseClass = 'tab-content';
+    /* get bar border */
+    if (this.props.contentBorder) {
+      const contentBorder = this.props.contentBorder;
+      if (/^w3-/.test(contentBorder)) {
+        baseClass = `${baseClass} ${contentBorder}`;
+      } else {
+        style.border = contentBorder;
+      }
+    }
     return (
-      <div className = 'tab-content' >
+      <div className = {baseClass} >
         {tabs.map((tab, index) => {
           const style = index === this.state.index? {display : 'block'} : {display : 'none'}
           return (
@@ -164,7 +185,6 @@ class Tab extends BaseComponent {
   }
 
   render() {
-    const _class = this.props.border ? 'w3-border' : '';
 
     let TopComponent = null;
     let BottomComponent = null;
@@ -181,7 +201,7 @@ class Tab extends BaseComponent {
 
     return (
       <sg-tabs>
-        <div className = {_class} >
+        <div>
           {TopComponent}
           {BottomComponent}
         </div>
@@ -195,9 +215,10 @@ Tab.PropTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   initialTabIndex: PropTypes.number,
   position: PropTypes.oneOf(['top', 'bottom']),
-
-  border: PropTypes.bool,
+  align: PropTypes.oneOf(['left', 'center', 'right']),
+  barBorder: PropTypes.string,
   barColor: PropTypes.string,
+  contentBorder: PropTypes.string,
   activeTabColor: PropTypes.string
 }
 
