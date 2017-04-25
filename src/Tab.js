@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 
 import util from './lib/util'
 import log from './lib/log'
+import { ANIMATION, createAnimStyle, validateAnimationName } from './lib/animation'
 import BaseComponent from './BaseComponent'
 
 const BAR_COLOR = 'w3-light-grey';
@@ -34,7 +35,8 @@ class Tab extends BaseComponent {
     this.state = {
       width: null,
       tabs: [],
-      index: 0
+      index: 0,
+      lastIndex: 0,
     };
 
     this.instance = null
@@ -90,7 +92,8 @@ class Tab extends BaseComponent {
 
   setActiveTab(index) {
     if (index === this.state.index) { return }
-    this.setState ({ index });
+    const lastIndex = this.state.index;
+    this.setState ({ index, lastIndex });
   }
 
   renderTabBar() {
@@ -199,6 +202,8 @@ class Tab extends BaseComponent {
         style.border = contentBorder;
       }
     }
+    const enterAnimation = this.createEnterAnimation();
+    const exitAnimation = this.createExitAnimation();
     return (
       <div className = {baseClass} >
         {tabs.map((tab, index) => {
@@ -211,6 +216,25 @@ class Tab extends BaseComponent {
         })}
       </div>
     );
+  }
+
+  createEnterAnimation() {
+    const anim = this.props.animation;
+    const animOptions = this.props.animationOptions;
+    if (anim && validateAnimationName(anim)) {
+      if (/push/i.test(anim)) {
+        anim = anim.replace('push','slide');      
+      }
+      const _animOptions = {...animOptions};   
+      _animOptions.direction = 'forwards';
+      _animOptions.duration = _animOptions.duration || ANIMATION.DEFAULT.DURATION;
+      return {
+        animation: createAnimStyle(anim, _animOptions),
+        to: _animOptions.duration
+      }
+    } else {
+      return { animation: null, to: 0 };
+    }
   }
 
   render() {
