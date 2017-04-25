@@ -279,7 +279,7 @@ class Tab extends BaseComponent {
     let anim = this.props.animation;
     const animOptions = this.props.animationOptions;
 
-    if (anim === undefined) {
+    if (anim === undefined || (util.isString(anim) && anim.toLowerCase() === 'none')) {
       return null;
     }
     
