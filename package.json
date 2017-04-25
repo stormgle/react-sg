@@ -7,7 +7,8 @@
     "build": "babel src -d dist",
     "prepublish": "npm run build",
     "bundle": "npm run build && babel demo/src -d demo/lib && webpack",
-    "demo": "npm run bundle && node demo/web/server"
+    "server": "npm run bundle && node demo/web/server",
+    "demo": "npm run server"
   },
   "repository": {
     "type": "git",

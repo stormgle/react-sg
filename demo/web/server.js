@@ -20,8 +20,8 @@ list.forEach(demo => {
   });
 });
 
-const server = app.listen('8080', () => {
+const server = app.listen('8080', 'localhost', () => {
   const host = server.address().address;
   const port = server.address().port;
-  console.log (` Server is running at http://${host} :${port}`);
+  console.log (` Server is running at http://${host}:${port}`);
 });
