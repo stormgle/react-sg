@@ -62,6 +62,11 @@ class Tab extends BaseComponent {
     this.getWidthReactively();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const tabs = this.getTabsData(nextProps.data);
+    this.setState({ tabs });
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.getWidthReactively, false);
   }

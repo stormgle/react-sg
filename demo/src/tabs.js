@@ -31,19 +31,40 @@ function renderCity(city) {
   };
 } 
 
-const tabs = Object.keys(dict).map(city => renderCity(city));
-
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      tabs: Object.keys(dict).map(city => renderCity(city))
+    };
+  }
 
+  getCity(city) {
+    this.city = city;
+  }
+
+  getCountry(country) {
+    this.country = country;
+  }
+
+  addNewTab() {
+    if (this.city && this.country) {
+      dict[this.city] = this.country;
+      const tabs = Object.keys(dict).map(city => renderCity(city));
+      this.setState({ tabs });
+    }
   }
 
   render() {
     return (
       <Page>
         <h3> Tabs Demonstration </h3>
-        <Tabs data = {tabs}
+        <div style = {{marginBottom: '20px'}}>
+          <input type = 'text' placeholder = 'City' onChange = {evt => this.getCity(evt.target.value)} />
+          <input type = 'text' placeholder = 'Country' onChange = {evt => this.getCountry(evt.target.value)} />
+          <button onClick = {this.addNewTab.bind(this)}> Add New Tab </button>
+        </div>
+        <Tabs data = {this.state.tabs}
              initialTabIndex = {1}
              barBorder = 'w3-border-bottom w3-border-grey'
              barColor = 'w3-light-grey'
