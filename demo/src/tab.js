@@ -48,6 +48,7 @@ class App extends Component {
              barBorder = 'w3-border-bottom w3-border-grey'
              barColor = 'w3-light-grey'
              activeTabColor = 'w3-dark-grey'
+             activeTabBorder = 'w3-border-bottom w3-border-black'
              contentBorder = 'w3-border-bottom w3-border-grey'
              position = 'top'
              align = 'justify' />

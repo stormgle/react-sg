@@ -8,7 +8,7 @@ import log from './lib/log'
 import BaseComponent from './BaseComponent'
 
 const BAR_COLOR = 'w3-light-grey';
-const ACTIVE_TAB_COLOR = 'w3-grey';
+const ACTIVE_TAB_COLOR = 'w3-dark-grey';
 
 class Tab extends BaseComponent {
 
@@ -21,6 +21,7 @@ class Tab extends BaseComponent {
    * @param {Boolean}         barBorder - a border around tab bar
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
+   * @param {String}          activeTabBorder - a border around active tab
    * @param {String}          contentBorder - a border around tab content
    * @param {Function}        onPreChange - Call before changin tab
    * @param {Function}        onChange - Call after tab has been changed
@@ -115,8 +116,9 @@ class Tab extends BaseComponent {
       }
     }
 
-    /* get active tab color */
+    /* get active tab color & border */
     const activeTabColor = this.props.activeTabColor || ACTIVE_TAB_COLOR;
+    const activeTabBorder = this.props.activeTabBorder || null;
     
     /* align tab bar left, right, center */
     const wrapStyle = {
@@ -152,12 +154,19 @@ class Tab extends BaseComponent {
             {tabs.map((tab, index) => {          
               let btnClass = 'w3-bar-item w3-button';
               const btnStyle = {width: btnWidth};
-              /* apply active tab color if active */
+              /* apply active tab color & border if active */
               if (index === this.state.index) {
                 if (/^w3-/.test(activeTabColor)) {
                   btnClass = `${btnClass} ${activeTabColor}`;
                 } else {
                   btnStyle.backgroundColor = activeTabColor;
+                }
+                if (activeTabBorder) {
+                  if (/^w3-/.test(activeTabBorder)) {
+                    btnClass = `${btnClass} ${activeTabBorder}`;
+                  } else {
+                    btnStyle.border = activeTabBorder
+                  }
                 }
               }
               /* align button to right if specified, only effective if tab align is left */
