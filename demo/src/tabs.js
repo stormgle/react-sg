@@ -53,7 +53,9 @@ class App extends Component {
              position = 'top'
              align = 'justify'
              animation = 'push'
-             animationOptions = {{duration: 1000}} />
+             animationOptions = {{duration: 1000}}
+             onPreChange = {(current, next) => console.log(`pre-change: current tab is ${current}, next tab index is ${next}`)}
+             onChange = {(current, last) => console.log(`changed: current tab index is ${current}, last tab is ${last}`)} />
       </Page>
     )
   }

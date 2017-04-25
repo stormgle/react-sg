@@ -98,19 +98,22 @@ class Tab extends BaseComponent {
 
     const lastIndex = this.state.index;
 
+    /* invoke onPreChange callback before re-render */
+    if (this.props.onPreChange) {
+      this.props.onPreChange(lastIndex, index);
+    }
     const direction = lastIndex > index ? 'left' : 'right';
     const enterAnimation = this.createEnterAnimation(0, direction);
     const exitAnimation = this.createExitAnimation(0, direction);
 
     this.setState ({ index, lastIndex, enterAnimation, exitAnimation });
 
-    // setTimeout(() => {
-    //   this.setState({ enterAnimation: null});
-    // }, enterAnimation.to);
-
-    // setTimeout(() => {
-    //   this.setState({ exitAnimation: null});
-    // }, exitAnimation.to);
+    /* invoke onChange callback after animation completed */
+    if (this.props.onChange) {
+      setTimeout(() => {
+        this.props.onChange(index, lastIndex);
+      }, enterAnimation.to);
+    }    
     
   }
 
