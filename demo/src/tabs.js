@@ -8,7 +8,7 @@ import '../../css/storm.css'
 import '../../css/animation.css'
 
 import Page from '../../dist/Page'
-import Tab from  '../../dist/Tab'
+import Tabs from  '../../dist/Tabs'
 
 const dict = {
   Hanoi: 'Vietnam',
@@ -43,7 +43,7 @@ class App extends Component {
     return (
       <Page>
         <h3> Tabs Demonstration </h3>
-        <Tab data = {tabs}
+        <Tabs data = {tabs}
              initialTabIndex = {1}
              barBorder = 'w3-border-bottom w3-border-grey'
              barColor = 'w3-light-grey'

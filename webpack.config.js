@@ -12,7 +12,7 @@ module.exports = {
 		navigator: './demo/lib/navigator.js',
 		splitter: './demo/lib/splitter.js',
 		sidebar: './demo/lib/sidebar.js',
-		tab: './demo/lib/tab.js'
+		tabs: './demo/lib/tabs.js'
 	}, 
 
   output: {
