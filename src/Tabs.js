@@ -71,7 +71,6 @@ class Tab extends BaseComponent {
     */
     if (nextProps.index !== this.state.index && 
         nextProps.index !== this.props.index) {  
-          console.log('will update') 
           this.setActiveTab(nextProps.index);
     }
     
