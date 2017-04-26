@@ -16,7 +16,7 @@ class Tab extends BaseComponent {
   /**
    * Render a Tabs  
    * @param {Array}           data - define tabs for render. Each item is an object {label, content, side, show}
-   * @param {Number}          initialTabIndex - initial tab to be shown after mounted
+   * @param {Number}          index - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
    * @param {String}          align - align tab left, right, center or justify
    * @param {Boolean}         barBorder - a border around tab bar
@@ -41,10 +41,11 @@ class Tab extends BaseComponent {
       exitAnimation: null,
     };
 
-    this.instance = null
+    this.instance = null;
+    this._isAnimationRunning = false;
 
     this.bind(
-      'renderTabBar', 'renderTabContent',
+      'renderTabBar', 'renderTabContent', 'setActiveTab',
       '_getInstance', 'getWidthReactively',
       'createEnterAnimation', 'createExitAnimation',
     );
@@ -52,7 +53,7 @@ class Tab extends BaseComponent {
   }
 
   componentWillMount() {
-    const index = this.props.initialTabIndex || 0;
+    const index = this.props.index || 0;
     const tabs = this.getTabsData(this.props.data);
     this.setState({tabs, index});
   }
@@ -63,8 +64,23 @@ class Tab extends BaseComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const tabs = this.getTabsData(nextProps.data);
-    this.setState({ tabs });
+    /* user can force tab change by change prop index
+       we detect it by comparing new index with  state.index and previous index
+       and update stae.index only if
+          - index !== state.index && index !== props.index  
+    */
+    if (nextProps.index !== this.state.index && 
+        nextProps.index !== this.props.index) {  
+          console.log('will update') 
+          this.setActiveTab(nextProps.index);
+    }
+    
+    /* to support dynamic tab, we will capture new data */
+    if (nextProps.data !== this.props.data) {
+      const tabs = this.getTabsData(nextProps.data);
+      this.setState({ tabs });
+    }
+    
   }
 
   componentWillUnmount() {
@@ -98,15 +114,12 @@ class Tab extends BaseComponent {
 
   }
 
-  setActiveTab(index) {
-    if (index === this.state.index) { return }
+  setActiveTab(index) {   
+
+    if (this._isAnimationRunning) { return } // prevent run twice
 
     const lastIndex = this.state.index;
 
-    /* invoke onPreChange callback before re-render */
-    if (this.props.onPreChange) {
-      this.props.onPreChange(lastIndex, index);
-    }
     const direction = lastIndex > index ? 'left' : 'right';
     const enterAnimation = this.createEnterAnimation(0, direction);
     const exitAnimation = this.createExitAnimation(0, direction);
@@ -116,10 +129,24 @@ class Tab extends BaseComponent {
     /* invoke onChange callback after animation completed */
     if (this.props.onChange) {
       setTimeout(() => {
+        this._isAnimationRunning = false;
         this.props.onChange(index, lastIndex);
       }, enterAnimation.to);
     }    
+
+    this._isAnimationRunning = true;
     
+  }
+
+  onPreChange(index) {
+    if (index === this.state.index) { return }
+    if (this._isAnimationRunning) { return } // prevent run twice
+    const lastIndex = this.state.index;
+    /* invoke onPreChange callback before re-render */
+    if (this.props.onPreChange) {
+      this.props.onPreChange(lastIndex, index);
+    }  
+    this.setActiveTab(index);
   }
 
   renderTabBar() {
@@ -205,7 +232,7 @@ class Tab extends BaseComponent {
               return (
                 <button key = {index} 
                         className = {btnClass} style = {btnStyle}
-                        onClick = {() => this.setActiveTab(index)} >
+                        onClick = {() => this.onPreChange(index)} >
                   {tab.label}
                 </button>
               );
@@ -357,13 +384,18 @@ class Tab extends BaseComponent {
 
 Tab.PropTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  initialTabIndex: PropTypes.number,
+  index: PropTypes.number,
   position: PropTypes.oneOf(['top', 'bottom']),
   align: PropTypes.oneOf(['left', 'center', 'right']),
   barBorder: PropTypes.string,
   barColor: PropTypes.string,
   contentBorder: PropTypes.string,
-  activeTabColor: PropTypes.string
+  activeTabColor: PropTypes.string,
+  activeTabBorder: PropTypes.string,
+  onPreChange: PropTypes.func,
+  onChange: PropTypes.func,
+  animation: PropTypes.string,
+  animationOptions: PropTypes.object,
 }
 
 Tab.sgType = 'tab';

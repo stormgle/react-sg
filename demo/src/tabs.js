@@ -35,7 +35,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tabs: Object.keys(dict).map(city => renderCity(city))
+      tabs: Object.keys(dict).map(city => renderCity(city)),
+      index: 0,
     };
   }
 
@@ -55,6 +56,10 @@ class App extends Component {
     }
   }
 
+  moveToTab(index) {
+    this.setState({ index });
+  }
+
   render() {
     return (
       <Page>
@@ -64,19 +69,25 @@ class App extends Component {
           <input type = 'text' placeholder = 'Country' onChange = {evt => this.getCountry(evt.target.value)} />
           <button onClick = {this.addNewTab.bind(this)}> Add New Tab </button>
         </div>
+        <div style = {{marginBottom: '20px'}} >
+          {this.state.tabs.map((tab,index) => (
+            <button key={index} onClick = {e => this.moveToTab(index)} style = {{width: '30px', marginRight: '5px'}}>
+              {`${index}`}
+            </button>
+          ))}
+        </div>
         <Tabs data = {this.state.tabs}
-             initialTabIndex = {1}
+             index = {this.state.index}
              barBorder = 'w3-border-bottom w3-border-grey'
-             barColor = 'w3-light-grey'
-             activeTabColor = 'w3-light-grey'
-             activeTabBorder = 'w3-border-bottom w3-border-black'
+             barColor = 'w3-black'
+             activeTabColor = 'w3-red'
              contentBorder = 'w3-border-bottom w3-border-grey'
              position = 'top'
              align = 'justify'
              animation = 'push'
              animationOptions = {{duration: 1000}}
-             onPreChange = {(current, next) => console.log(`pre-change: current tab is ${current}, next tab index is ${next}`)}
-             onChange = {(current, last) => console.log(`changed: current tab index is ${current}, last tab is ${last}`)} />
+             onPreChange = {(current, next) => {console.log('pre-change'); }}
+             onChange = {(current, last) => {console.log(`changed`); this.moveToTab(current)}} />
       </Page>
     )
   }
