@@ -150,7 +150,7 @@ class Page extends BaseComponent {
     */
     const shallowCloneElement = element => { 
       let children = [];
-      if (util.isString(element)) {
+      if (!util.isObject(element)) {
         return element;
       }
 
