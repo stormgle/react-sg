@@ -351,13 +351,17 @@ class Tab extends BaseComponent {
     } else {
       // render tabbar at bottom
       TopComponent = this.renderTabBar();
-      BottomComponent = this.renderTabContent();
-      
+      BottomComponent = this.renderTabContent();     
+    }
+
+    const style = {};
+    if (this.props.height) {
+      style.height = this.props.height;
     }
 
     return (
       <sg-tabs>
-        <div ref = {this._getInstance}>
+        <div ref = {this._getInstance} style = {style} >
           {TopComponent}
           {BottomComponent}
         </div>
@@ -395,6 +399,7 @@ Tab.PropTypes = {
   onChange: PropTypes.func,
   animation: PropTypes.string,
   animationOptions: PropTypes.object,
+  height: PropTypes.string,
 }
 
 Tab.sgType = 'tab';

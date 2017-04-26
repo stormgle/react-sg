@@ -87,7 +87,8 @@ class App extends Component {
              animation = 'push'
              animationOptions = {{duration: 1000}}
              onPreChange = {(current, next) => {console.log('pre-change'); }}
-             onChange = {(current, last) => {console.log(`changed`); this.moveToTab(current)}} />
+             onChange = {(current, last) => {console.log(`changed`); this.moveToTab(current)}}
+             height = '70%' />
       </Page>
     )
   }

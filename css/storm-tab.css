@@ -2,6 +2,7 @@
 .tab-content-box {
   position: relative;
   overflow-x: hidden;
+  height: 100%;
 }
 
 .tab-content {
