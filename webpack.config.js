@@ -11,7 +11,8 @@ module.exports = {
 		page: './demo/lib/page.js',
 		navigator: './demo/lib/navigator.js',
 		sidebar: './demo/lib/sidebar.js',
-		tabs: './demo/lib/tabs.js'
+		tabs: './demo/lib/tabs.js',
+		toucharea: './demo/lib/toucharea.js'
 	}, 
 
   output: {
