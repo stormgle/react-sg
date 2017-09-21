@@ -29,15 +29,16 @@ export default class TouchArea extends Component {
 		this.hammerTime = new Hammer(this.domEl, this.props.options);
 		events.forEach( e => {
 			const evt = `on${e}`;
-			if (this.props[evt]) {
+			if (this.props[evt]) {								
 				this.hammerTime.on(e.toLowerCase(), this.props[evt]);
 			}
 		});		
+		console.log(this.domEl);		
 	}
 	
 	render() {
 		return (
-			<div ref = {this.getInstant} >
+			<div ref = {this.getInstant} style = {{backgroundColor: 'yellow'}}>
 				{this.props.children}
 			</div>
 		);

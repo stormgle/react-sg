@@ -6,7 +6,7 @@ const fs = require('fs');
 
 console.log(`Server START`);
 
-const list = ['page', 'navigator', 'splitter', 'sidebar', 'tabs'];
+const list = ['page', 'navigator', 'sidebar', 'tabs', 'toucharea'];
 
 app.use(express.static(__dirname));
 
