@@ -38,7 +38,7 @@ export default class TouchArea extends Component {
 	
 	render() {
 		return (
-			<div ref = {this.getInstant} style = {{backgroundColor: 'yellow'}}>
+			<div ref = {this.getInstant} >
 				{this.props.children}
 			</div>
 		);

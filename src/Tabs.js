@@ -7,6 +7,7 @@ import util from './lib/util'
 import log from './lib/log'
 import { ANIMATION, createAnimStyle, validateAnimationName } from './lib/animation'
 import BaseComponent from './BaseComponent'
+import TouchArea from './TouchArea'
 
 const BAR_COLOR = 'w3-light-grey';
 const ACTIVE_TAB_COLOR = 'w3-dark-grey';
@@ -19,7 +20,7 @@ class Tab extends BaseComponent {
    * @param {Number}          index - initial tab to be shown after mounted
    * @param {String}          position - position Top or Bottom
    * @param {String}          align - align tab left, right, center or justify
-   * @param {Boolean}         barBorder - a border around tab bar
+   * @param {String}          barBorder - a border around tab bar
    * @param {String}          barColor - color of Tab bar
    * @param {String}          activeTabColor - color of active tab
    * @param {String}          activeTabBorder - a border around active tab
@@ -28,6 +29,9 @@ class Tab extends BaseComponent {
    * @param {Function}        onChange - Call after tab has been changed
    * @param {String}          animation - define animation, support: slide, push
    * @param {Object}          animationOptions - define animation option 
+   * @param {Boolean}         swipeable - swipe left or right to switch tab
+   * @param {Function}        onSwipeLeft - Call after swipe gesture
+   * @param {Function}        onSwipeRight - Call after swipe gesture
    */
   constructor(props) {
     super(props);
@@ -36,7 +40,7 @@ class Tab extends BaseComponent {
       width: null,
       tabs: [],
       index: 0,
-      lastIndex: 0,
+      previousIndex: 0,
       enterAnimation: null,
       exitAnimation: null,
     };
@@ -48,6 +52,7 @@ class Tab extends BaseComponent {
       'renderTabBar', 'renderTabContent', 'setActiveTab',
       '_getInstance', 'getWidthReactively',
       'createEnterAnimation', 'createExitAnimation',
+      'onSwipeLeft', 'onSwipeRight'
     );
 
   }
@@ -117,19 +122,21 @@ class Tab extends BaseComponent {
 
     if (this._isAnimationRunning) { return } // prevent run twice
 
-    const lastIndex = this.state.index;
+    if (index < 0 || index > this.state.tabs.length-1) { return }
 
-    const direction = lastIndex > index ? 'left' : 'right';
+    const previousIndex = this.state.index;
+
+    const direction = previousIndex > index ? 'left' : 'right';
     const enterAnimation = this.createEnterAnimation(0, direction);
     const exitAnimation = this.createExitAnimation(0, direction);
 
-    this.setState ({ index, lastIndex, enterAnimation, exitAnimation });
+    this.setState ({ index, previousIndex, enterAnimation, exitAnimation });
 
     /* invoke onChange callback after animation completed */
     if (this.props.onChange) {
       setTimeout(() => {
         this._isAnimationRunning = false;
-        this.props.onChange(index, lastIndex);
+        this.props.onChange(index, previousIndex);
       }, enterAnimation.to);
     }    
 
@@ -140,12 +147,26 @@ class Tab extends BaseComponent {
   onPreChange(index) {
     if (index === this.state.index) { return }
     if (this._isAnimationRunning) { return } // prevent run twice
-    const lastIndex = this.state.index;
+    const previousIndex = this.state.index;
     /* invoke onPreChange callback before re-render */
     if (this.props.onPreChange) {
-      this.props.onPreChange(lastIndex, index);
+      this.props.onPreChange(previousIndex, index);
     }  
     this.setActiveTab(index);
+  }
+
+  onSwipeLeft(evt) {
+    if (this.props.swipeable) {
+      if (this.props.onSwipeLeft) { this.props.onSwipeLeft(evt); }
+      this.onPreChange(this.state.index+1);
+    }    
+  }
+
+  onSwipeRight(evt) {
+    if (this.props.swipeable) {
+      if (this.props.onSwipeRight) { this.props.onSwipeRight(evt); }
+      this.onPreChange(this.state.index-1);
+    }
   }
 
   renderTabBar() {
@@ -256,28 +277,31 @@ class Tab extends BaseComponent {
     }
 
     return (
-      <div className = {baseClass} >
-        {tabs.map((tab, index) => {
-          let style = index === this.state.index? {display : 'block'} : {display : 'none'};
-          if (index === this.state.index) {
-            if (this.state.enterAnimation) {
-              style = {...style, ...this.state.enterAnimation.animation};
+      <div className = {baseClass} > 
+        <TouchArea onSwipeLeft = {this.onSwipeLeft} 
+                   onSwipeRight = {this.onSwipeRight}>
+          {tabs.map((tab, index) => {
+            let style = index === this.state.index? {display : 'block'} : {display : 'none'};
+            if (index === this.state.index) {
+              if (this.state.enterAnimation) {
+                style = {...style, ...this.state.enterAnimation.animation};
+              }
             }
-          }
-          if (index === this.state.lastIndex) {
-            if (this.state.exitAnimation) {
-              style = {...style, ...this.state.exitAnimation.animation};
-              style.display = 'block';
-              style.position = 'absolute';
-              style.top = 0;
+            if (index === this.state.previousIndex) {
+              if (this.state.exitAnimation) {
+                style = {...style, ...this.state.exitAnimation.animation};
+                style.display = 'block';
+                style.position = 'absolute';
+                style.top = 0;
+              }
             }
-          }
-          return (
-            <div className = 'tab-content' key= {index} style = {style} >
-              {tab.content}
-            </div>
-          );
-        })}
+            return (
+              <div className = 'tab-content' key= {index} style = {style} >
+                {tab.content}
+              </div>
+            );
+          })}
+        </TouchArea>
       </div>
     );
   }
@@ -400,6 +424,9 @@ Tab.PropTypes = {
   animation: PropTypes.string,
   animationOptions: PropTypes.object,
   height: PropTypes.string,
+  swipeable: PropTypes.bool,
+  onSwipeLeft: PropTypes.func,
+  onSwipeRight: PropTypes.func
 }
 
 Tab.sgType = 'tab';

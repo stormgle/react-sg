@@ -88,6 +88,9 @@ class App extends Component {
              animationOptions = {{duration: 1000}}
              onPreChange = {(current, next) => {console.log('pre-change'); }}
              onChange = {(current, last) => {console.log(`changed`); this.moveToTab(current)}}
+             swipeable
+             onSwipeLeft = {evt => console.log(evt)}
+             onSwipeRight = {evt => console.log(evt)}
              height = '70%' />
       </Page>
     )
