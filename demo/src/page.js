@@ -8,6 +8,7 @@ import '../../css/storm.css'
 import '../../css/animation.css'
 
 import Page from '../../dist/Page'
+import Popup from '../../dist/Popup'
 
 let i = 0;
 class Demo extends Component {
@@ -65,9 +66,25 @@ class Demo extends Component {
 		this.setState({ showFooter : !this.state.showFooter});
 	}
 
-	showModal () {
+	showPopup () {
+		let _popup = null;
+		const diag = (
+			<Popup onInit = {popup => {_popup = popup}} >
+				<div style = {{width: '100%', height: '100%', backgroundColor: 'grey'}} >
+					<h2> POPUP </h2>
+					<div>
+						<button onClick = {() => {if (_popup) {_popup.resolve('pup', 'ok')} }}> OK </button>
+						<button onClick = {() => {if (_popup) {_popup.reject('pup', 'cancel')} }}> Cancel </button>
+					</div>
+				</div>
+			</Popup>
+		);
 		if (this.page) {
-			this.page.showModal();
+			this.page.popup({
+				diag: diag,
+				resolve: (pup, msg) => console.log(pup + ": " + msg),
+				reject: (pup, msg) => console.log(pup + ": " + msg),
+			});
 		}
 	}
 	
@@ -90,7 +107,7 @@ class Demo extends Component {
 			<Page onInit = {page => this.page = page}
 						renderHeader = {this.renderHeader.bind(this)}
 						renderFooter = {this.renderFooter.bind(this)}
-						renderModal  = {this.renderModal.bind(this)} >
+						>
 				
 				<div>
 					<button onClick = {() => this.toggleHeader()}>
@@ -102,7 +119,7 @@ class Demo extends Component {
 				</div>
 
 				<div>
-					<button onClick = {() => this.showModal()}> Modal </button>
+					<button onClick = {() => this.showPopup()}> Popup </button>
 					<button onClick = {() => this.pushOverlay()}> Overlay </button>
 				</div>
 

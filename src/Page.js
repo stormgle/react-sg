@@ -24,7 +24,6 @@ class Page extends BaseComponent {
    * @param {Function} renderHeader - render Header of Page
    * @param {Function} renderFooter - renderFooter of Page
    * @param {Function} renderFixed - render a fixed component on Page
-   * @param {Function} renderModal - render a model cover entire of Page
    * @param {Function} onInit - function will be invoked before Page is mounted
    * @param {Function} onShow - function will be invoked after page has been shown ??
    * @param {Function} onHide - function will be invoked after page has been hide ??
@@ -44,8 +43,12 @@ class Page extends BaseComponent {
       pushOverlay : this.pushOverlay.bind(this), 
       popOverlay : this.popOverlay.bind(this),
       showModal : this.showModal.bind(this), 
-      hideModal : this.hideModal.bind(this) 
+      hideModal : this.hideModal.bind(this), 
+      popup: this.popup.bind(this),
+      closePopup: this.closePopup.bind(this)
     };
+
+    this.popupDiag = null;
 
     this.overlayStack = [];
 
@@ -102,6 +105,22 @@ class Page extends BaseComponent {
     this.setState({ showModal : false });
   }
 
+  popup({diag, resolve, reject}) {
+
+    this.popupDiag = React.cloneElement(diag, {
+      page: this.page,
+      resolve: resolve,
+      reject: reject
+    });
+    
+    this.showModal();
+  }
+
+  closePopup() {
+    this.popupDiag = null;
+    this.hideModal();
+  }
+
   _renderOverlay() {
     if (this.overlayStack.length > 0) {
       return (
@@ -140,8 +159,11 @@ class Page extends BaseComponent {
     const header = this.props.renderHeader ? this.props.renderHeader(this.page) : null;
     const footer = this.props.renderFooter ? this.props.renderFooter(this.page) : null;
     const fixed  = this.props.renderFixed ? this.props.renderFixed(this.page) : null;
+    /* changed: modal is only used for popup 
     const modal  = this.props.renderModal ? this.props.renderModal(this.page) : null;
-    
+    */
+    const modal = this.popupDiag;
+
     const pageStyle = this.props.style || {};
     const pageClass = this.props.className || ''; 
 
