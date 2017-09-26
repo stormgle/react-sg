@@ -2,4 +2,7 @@
 set linuxPath=%2
 set word=\
 call set windowPath=%%linuxPath:/=%word%%%
-rmdir /S /Q %windowPath%
+
+if exist %windowPath% (
+  rmdir /S /Q %windowPath%
+)
