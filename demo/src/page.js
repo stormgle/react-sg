@@ -70,8 +70,9 @@ class Demo extends Component {
 		let _popup = null;
 		const diag = (
 			<Popup onInit = {popup => {_popup = popup}} >
-				<div style = {{width: '100%', height: '100%', backgroundColor: 'grey'}} >
+				<div style={{width: '250px'}} >
 					<h2> POPUP </h2>
+					<p> paragraph </p>
 					<div>
 						<button onClick = {() => {if (_popup) {_popup.resolve('pup', 'ok')} }}> OK </button>
 						<button onClick = {() => {if (_popup) {_popup.reject('pup', 'cancel')} }}> Cancel </button>

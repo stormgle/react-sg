@@ -47,7 +47,10 @@ class Popup extends BaseComponent {
   render() {
     return (
       <div className = "__page_popup" >
-        {this.props.children}
+        <div className = "__page_popup_floater" />
+        <div className = "__page_popup_child w3-card-4">
+          {this.props.children}
+        </div>
       </div>
     );
   }

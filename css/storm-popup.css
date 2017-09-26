@@ -1,0 +1,18 @@
+
+.__page_popup {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.__page_popup_floater {
+  float: left;
+  height: 40%;
+  width: 100%;
+  margin-bottom: -50px;
+}
+.__page_popup_child {
+  clear: both;
+  display: table;
+  margin: 0 auto;
+}

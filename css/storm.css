@@ -1,6 +1,7 @@
 @import 'storm-page.css';
 @import 'storm-navigator.css';
 @import 'storm-tab.css';
+@import 'storm-popup.css';
 
 /* global page style */
 html {
