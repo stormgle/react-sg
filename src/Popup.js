@@ -69,8 +69,22 @@ class Popup extends BaseComponent {
       animation = this._createExitAnimation();
     }
 
+    const mask = this.props.options ? this.props.options.mask : undefined;
+
+    let _class = "__page_popup_mask";
+    let _style = {opacity: '0.5', zIndex : '-1'};
+
+    if (mask) {
+      if(util.isString(mask)) {
+        _class = `${_class} ${mask}`;
+      } else {
+        _style = {..._style, ...mask};
+      }
+    }
+
     return (
       <div className = "__page_popup" style = {{...animation}} >
+        <div className = {_class} style = {_style} />
         <div className = "__page_popup_floater" />
         <div className = "__page_popup_child w3-card-4"  >
           {this.props.children}

@@ -90,7 +90,8 @@ class Demo extends Component {
 						enter: 'slide-top',
 						 exit: 'slide-bottom',
 						 resolve: 'slide-top'
-						}
+					},
+					//mask: 'w3-light-grey'
 				}
 			});
 		}

@@ -198,10 +198,10 @@ class Page extends BaseComponent {
       <sg-page > 
         <div className = 'page' >
           <div className = 'page_background' />
-          <div className = {`page_modal ${style}-container ${this.state.showModal ? '' : 'hide'}`} > 
+          <div className = {`page_modal ${this.state.showModal ? '' : 'hide'}`} > 
             {modal} 
           </div>
-          <div className = {`page_overlay ${style}-container ${this.state.showOverlay ? '' : 'hide'}`} >
+          <div className = {`page_overlay ${this.state.showOverlay ? '' : 'hide'}`} >
             {this._renderOverlay()}
           </div>
           <div className = {`page_header ${style}-container ${this.state.hideHeader ? 'hide' : ''}`} 
