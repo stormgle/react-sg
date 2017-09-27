@@ -105,12 +105,13 @@ class Page extends BaseComponent {
     this.setState({ showModal : false });
   }
 
-  popup({diag, resolve, reject}) {
+  popup({diag, resolve = null, reject = null, options = null}) {
 
     this.popupDiag = React.cloneElement(diag, {
       page: this.page,
-      resolve: resolve,
-      reject: reject
+      resolve,
+      reject,
+      options
     });
     
     this.showModal();

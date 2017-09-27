@@ -70,7 +70,7 @@ class Demo extends Component {
 		let _popup = null;
 		const diag = (
 			<Popup onInit = {popup => {_popup = popup}} >
-				<div style={{width: '250px'}} >
+				<div style={{width: '250px', backgroundColor: 'white'}} >
 					<h2> POPUP </h2>
 					<p> paragraph </p>
 					<div>
@@ -85,6 +85,9 @@ class Demo extends Component {
 				diag: diag,
 				resolve: (pup, msg) => console.log(pup + ": " + msg),
 				reject: (pup, msg) => console.log(pup + ": " + msg),
+				options: {
+					animation: {enter: 'slide-top', exit: 'slide-bottom'}
+				}
 			});
 		}
 	}
