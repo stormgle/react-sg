@@ -19,7 +19,7 @@ class Popup extends BaseComponent {
 
     this.bind(
       '_createEnterAnimation', '_createExitAnimation',
-      '_animateEnter', '_animateExit',
+      '_extractAnimation', '_animateEnter', '_animateExit',
       '_resolve', '_reject'
     );
 
@@ -34,7 +34,7 @@ class Popup extends BaseComponent {
       this.popup.resolve = (...args) => {
         this._animateExit(() => {
           this._resolve(...args);
-        });
+        }, 'resolve');
       }
     }
 
@@ -42,7 +42,7 @@ class Popup extends BaseComponent {
       this.popup.reject = (...args) => {       
         this._animateExit(() => {
           this._reject(...args);
-        });          
+        }, 'reject');          
       }
     }
 
@@ -103,62 +103,65 @@ class Popup extends BaseComponent {
     }
   }
 
-  _animateEnter() {
-    if (this.props.options && 
-      this.props.options.animation && 
-      this.props.options.animation.enter) {
+  _extractAnimation(options, when) {
+    if (options && 
+      options.animation && 
+      options.animation[when]) {
 
       let name;  
-      if (util.isObject(this.props.options.animation.enter)) {
-        name = this.props.options.animation.enter.name || 'slide-top';
-      } else if (util.isString(this.props.options.animation.enter)) {
-        name = this.props.options.animation.enter;
+      if (util.isObject(options.animation[when])) {
+        name = this.props.options.animation[when].name || 'slide-top';
+      } else if (util.isString(this.props.options.animation[when])) {
+        name = this.props.options.animation[when];
       } else {
         /* catch error here */
       }
 
-      const duration = this.props.options.animation.enter.duration || ANIMATION.DEFAULT.DURATION;
+      const duration = this.props.options.animation[when].duration || ANIMATION.DEFAULT.DURATION;
 
+      return {name, duration};
+
+    }
+  }
+
+  _animateEnter() {
+    const {name, duration} = this._extractAnimation(this.props.options, 'enter');
+    if (name) {
       this.setState({
         animation: {
           enter: {name, duration},
           exit: null
         }
       });
-
     }
   }
 
-  _animateExit(callback) {
-    if (this.props.options && 
-      this.props.options.animation && 
-      this.props.options.animation.exit) {
-
-      let name;  
-      if (util.isObject(this.props.options.animation.exit)) {
-        name = this.props.options.animation.exit.name || 'slide-top';
-      } else if (util.isString(this.props.options.animation.exit)) {
-        name = this.props.options.animation.exit;
-      } else {
-        /* catch error here */
-      }
-
-      const duration = this.props.options.animation.exit.duration || ANIMATION.DEFAULT.DURATION;
-
+  _animateExit(callback, act) {
+    let name;
+    let duration;
+    if (act && this.props.options && 
+        this.props.options.animation && this.props.options.animation[act]) {
+        const animation = this._extractAnimation(this.props.options, act);
+        name = animation.name;
+        duration = animation.duration;
+    } else {
+      const animation = this._extractAnimation(this.props.options, 'exit');
+       name = animation.name;
+       duration = animation.duration;
+    }
+    
+    if (name) {
       // set exit animation
       this.setState({
         animation: {
           exit: {name, duration},
           enter: null
         }
-      });
-      
+      });      
       setTimeout(() => {
         this.setState({animation: {enter: null, exit: null}});
         callback();
-      }, duration);
-      
-
+      }, duration);      
     } else {
       callback();
     }

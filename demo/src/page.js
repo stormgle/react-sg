@@ -86,7 +86,11 @@ class Demo extends Component {
 				resolve: (pup, msg) => console.log(pup + ": " + msg),
 				reject: (pup, msg) => console.log(pup + ": " + msg),
 				options: {
-					animation: {enter: 'slide-top', exit: 'slide-bottom'}
+					animation: {
+						enter: 'slide-top',
+						 exit: 'slide-bottom',
+						 resolve: 'slide-top'
+						}
 				}
 			});
 		}
