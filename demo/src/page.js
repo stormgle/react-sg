@@ -101,12 +101,31 @@ class Demo extends Component {
 		if (this.page) {
 			this.page.popup(diag.alert({
 				title: 'Alert Dialog Example',
-				message: <p> A example of using <b> diag generator</b> utility. </p>,
-				onClose: () => console.log('alert dialog closed')
+				message: <p> An example of using <b> diag generator</b> utility. </p>,
+				onClose: () => console.log('alert dialog closed'),
+				label: 'Got it',
+				options: {
+					animation : { enter : 'slide-top'}
+				}
 			}));
 		}
 	}
 	
+	showConfirm() {
+		if (this.page) {
+			this.page.popup(diag.confirm({
+				title: 'Confirm Dialog Example',
+				message: <p> An example of using <b> diag generator</b> utility. </p>,
+				label: { acceptButton : 'OK', declineButton : 'Cancel'},
+				onAccept: () => console.log('confirm dialog: accepted'),
+				onDecline: () => console.log('confirm dialog: declined'),
+				options: {
+					animation : { enter : 'slide-top'}
+				}
+			}));
+		}
+	}
+
 	pushOverlay () {
 		if (this.page) {
 			i++;
@@ -140,6 +159,7 @@ class Demo extends Component {
 				<div>
 					<button onClick = {() => this.showPopup()}> Popup </button>
 					<button onClick = {() => this.showAlert()}> Alert </button>
+					<button onClick = {() => this.showConfirm()}> Confirm </button>
 				</div>
 
 				<div>

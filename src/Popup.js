@@ -216,7 +216,7 @@ export default Popup;
 
 /* Popup utilities for creating common diaglog */
 
-function alert({title = '', message = '', onClose = null, options = null}) {
+function alert({title = '', message = '', label = null, onClose = null, options = null}) {
   let _popup = null;
   const diag = (
     <Popup onInit = {popup => {_popup = popup}} >
@@ -237,7 +237,7 @@ function alert({title = '', message = '', onClose = null, options = null}) {
 
         <button className = 'w3-button w3-block w3-white w3-border-top' 
                 onClick = {() => {if (_popup) {_popup.resolve()} }} > 
-                Close 
+          { label && util.isString(label) ? label : 'Close' } 
         </button>
 
       </div>
@@ -252,7 +252,52 @@ function alert({title = '', message = '', onClose = null, options = null}) {
 }
 
 
+function confirm({title = '', message = '', label = null, onAccept = null, onDecline = null, options = null}) {
+  let _popup = null;
+  const diag = (
+    <Popup onInit = {popup => {_popup = popup}} >
+      <div style={{maxWidth: '250px', backgroundColor: 'white'}} >
+
+        <header className = 'w3-container w3-red'>
+          <h4> {title} </h4>
+        </header>
+
+        <div className="w3-container">
+          {
+            util.isString(message) ? 
+              <p> {message} </p> : 
+              <div> {message} </div>
+          }
+        </div>
+
+        <div className = 'w3-white w3-border-top w3-cell-row' >
+          <div className = 'w3-cell' >
+            <button className = 'w3-button w3-block w3-white' 
+                    onClick = {() => {if (_popup) {_popup.resolve()} }} > 
+              {label && label.acceptButton ? label.acceptButton : 'Accept'} 
+            </button>
+          </div>
+          <div className = 'w3-cell' >
+            <button className = 'w3-button w3-block w3-white' 
+                    onClick = {() => {if (_popup) {_popup.reject()} }} > 
+              {label && label.declineButton ? label.declineButton : 'Decline'} 
+            </button>
+          </div>
+        </div>
+      </div>
+    </Popup>
+  );
+  return {
+    diag: diag,
+    resolve: onAccept || function(){},
+    reject: onDecline|| function(){},
+    options
+  };
+}
+
+
 
 export const diag = {
-  alert
+  alert,
+  confirm
 };
