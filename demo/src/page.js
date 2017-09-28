@@ -101,7 +101,8 @@ class Demo extends Component {
 		if (this.page) {
 			this.page.popup(diag.alert({
 				title: 'Alert Dialog Example',
-				message: 'A example of using diag generator utility.'
+				message: <p> A example of using <b> diag generator</b> utility. </p>,
+				onClose: () => console.log('alert dialog closed')
 			}));
 		}
 	}

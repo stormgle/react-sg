@@ -227,7 +227,11 @@ function alert({title = '', message = '', onClose = null, options = null}) {
         </header>
 
         <div className="w3-container">
-          <p> {message} </p>
+          {
+            util.isString(message) ? 
+              <p> {message} </p> : 
+              <div> {message} </div>
+          }
         </div>
 
 
@@ -246,6 +250,8 @@ function alert({title = '', message = '', onClose = null, options = null}) {
     options
   };
 }
+
+
 
 export const diag = {
   alert
