@@ -83,11 +83,13 @@ class Popup extends BaseComponent {
     }
 
     return (
-      <div className = "__page_popup" style = {{...animation}} >
+      <div className = "__page_popup" >
         <div className = {_class} style = {_style} />
-        <div className = "__page_popup_floater" />
-        <div className = "__page_popup_child w3-card-4"  >
-          {this.props.children}
+        <div className = "__page_popup_diaglog" style = {{...animation}}>
+          <div className = "__page_popup_floater" />
+          <div className = "__page_popup_child w3-card-4"  >
+            {this.props.children}
+          </div>
         </div>
       </div>
     );
@@ -135,6 +137,8 @@ class Popup extends BaseComponent {
 
       return {name, duration};
 
+    } else {
+      return {name: null, duration: null}; // fix bug of return undefined object
     }
   }
 
@@ -209,3 +213,40 @@ Popup.PropTypes = {
 
 Popup.sgType = 'popup';
 export default Popup;
+
+/* Popup utilities for creating common diaglog */
+
+function alert({title = '', message = '', onClose = null, options = null}) {
+  let _popup = null;
+  const diag = (
+    <Popup onInit = {popup => {_popup = popup}} >
+      <div style={{maxWidth: '250px', backgroundColor: 'white'}} >
+
+        <header className = 'w3-container w3-red'>
+          <h4> {title} </h4>
+        </header>
+
+        <div className="w3-container">
+          <p> {message} </p>
+        </div>
+
+
+        <button className = 'w3-button w3-block w3-white w3-border-top' 
+                onClick = {() => {if (_popup) {_popup.resolve()} }} > 
+                Close 
+        </button>
+
+      </div>
+    </Popup>
+  );
+  return {
+    diag: diag,
+    resolve: onClose || function(){},
+    reject: onClose|| function(){},
+    options
+  };
+}
+
+export const diag = {
+  alert
+};

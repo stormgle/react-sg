@@ -8,7 +8,7 @@ import '../../css/storm.css'
 import '../../css/animation.css'
 
 import Page from '../../dist/Page'
-import Popup from '../../dist/Popup'
+import Popup, { diag } from '../../dist/Popup'
 
 let i = 0;
 class Demo extends Component {
@@ -91,9 +91,18 @@ class Demo extends Component {
 						 exit: 'slide-bottom',
 						 resolve: 'slide-top'
 					},
-					//mask: 'w3-light-grey'
+					mask: 'w3-light-grey'
 				}
 			});
+		}
+	}
+
+	showAlert() {
+		if (this.page) {
+			this.page.popup(diag.alert({
+				title: 'Alert Dialog Example',
+				message: 'A example of using diag generator utility.'
+			}));
 		}
 	}
 	
@@ -129,7 +138,11 @@ class Demo extends Component {
 
 				<div>
 					<button onClick = {() => this.showPopup()}> Popup </button>
-					<button onClick = {() => this.pushOverlay()}> Overlay </button>
+					<button onClick = {() => this.showAlert()}> Alert </button>
+				</div>
+
+				<div>
+				<button onClick = {() => this.pushOverlay()}> Overlay </button>
 				</div>
 
 			</Page>
