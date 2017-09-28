@@ -270,14 +270,14 @@ function confirm({title = '', message = '', label = null, onAccept = null, onDec
           }
         </div>
 
-        <div className = 'w3-white w3-border-top w3-cell-row' >
-          <div className = 'w3-cell' >
+        <div className = 'w3-white w3-border-top w3-row' >
+          <div className = 'w3-half' >
             <button className = 'w3-button w3-block w3-white' 
                     onClick = {() => {if (_popup) {_popup.resolve()} }} > 
               {label && label.acceptButton ? label.acceptButton : 'Accept'} 
             </button>
           </div>
-          <div className = 'w3-cell' >
+          <div className = 'w3-half' >
             <button className = 'w3-button w3-block w3-white' 
                     onClick = {() => {if (_popup) {_popup.reject()} }} > 
               {label && label.declineButton ? label.declineButton : 'Decline'} 
