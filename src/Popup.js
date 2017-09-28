@@ -216,13 +216,14 @@ export default Popup;
 
 /* Popup utilities for creating common diaglog */
 
-function alert({title = '', message = '', label = null, onClose = null, options = null}) {
+function alert({type = 'warn', title = '', message = '', label = null, onClose = null, options = null}) {
   let _popup = null;
+  const titleBgColor = type == 'info' ? 'w3-blue' : 'w3-red';
   const diag = (
     <Popup onInit = {popup => {_popup = popup}} >
       <div style={{maxWidth: '250px', backgroundColor: 'white'}} >
 
-        <header className = 'w3-container w3-red'>
+        <header className = {`w3-container ${titleBgColor}`}>
           <h4> {title} </h4>
         </header>
 
