@@ -313,7 +313,12 @@ function confirm({
   };
 }
 
-
+/* not fully supported yet 
+   todo:
+     - support varying of elements: input text, datebox, dropbox...
+     - capture return value and pass to resolve func
+     - reponsive width and height, full screen may be applied if needed
+*/
 function prompt({
   title = '', detail = null, label = null, onFinish = null, options = null
 }) {
