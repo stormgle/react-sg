@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import BaseComponent from './BaseComponent'
 import util from "./lib/util"
 import { ANIMATION, createAnimStyle, validateAnimationName } from './lib/animation'
+import mq from 'media-query'
 
 class Popup extends BaseComponent {
   constructor(props) {
@@ -216,12 +217,20 @@ export default Popup;
 
 /* Popup utilities for creating common diaglog */
 
-function alert({type = 'warn', title = '', message = '', label = null, onClose = null, options = null}) {
+function alert({
+  type = 'warn', title = '', message = '', label = null, onClose = null, options = null
+}) {
   let _popup = null;
   const titleBgColor = type == 'info' ? 'w3-blue' : 'w3-red';
+
+  const _style = {backgroundColor: 'white'};
+  if (mq.isSmall()) {
+    _style.width = '250px';
+  }
+
   const diag = (
     <Popup onInit = {popup => {_popup = popup}} >
-      <div style={{maxWidth: '250px', backgroundColor: 'white'}} >
+      <div style={_style} >
 
         <header className = {`w3-container ${titleBgColor}`}>
           <h4> {title} </h4>
@@ -253,13 +262,21 @@ function alert({type = 'warn', title = '', message = '', label = null, onClose =
 }
 
 
-function confirm({title = '', message = '', label = null, onAccept = null, onDecline = null, options = null}) {
+function confirm({
+  title = '', message = '', label = null, onAccept = null, onDecline = null, options = null
+}) {
   let _popup = null;
+
+  const _style = {backgroundColor: 'white'};
+  if (mq.isSmall()) {
+    _style.width = '250px';
+  }
+
   const diag = (
     <Popup onInit = {popup => {_popup = popup}} >
-      <div style={{maxWidth: '250px', backgroundColor: 'white'}} >
+      <div style={_style} >
 
-        <header className = 'w3-container w3-red'>
+        <header className = 'w3-container w3-blue'>
           <h4> {title} </h4>
         </header>
 
@@ -297,8 +314,61 @@ function confirm({title = '', message = '', label = null, onAccept = null, onDec
 }
 
 
+function prompt({
+  title = '', detail = null, label = null, onFinish = null, options = null
+}) {
+  let _popup = null;
+  const titleBgColor ='w3-blue';
+
+  const _style = {backgroundColor: 'white'};
+  if (mq.isSmall()) {
+    _style.width = '250px';
+  }
+
+
+  const diag = (
+    <Popup onInit = {popup => {_popup = popup}} >
+      <div style={_style} >
+
+        <header className = {`w3-container ${titleBgColor}`}>
+          <h4> {title} </h4>
+        </header>
+
+        <div className="w3-container w3-padding-16">
+          {
+            detail.map(entry => {
+              const label = entry.label;
+              const type = entry.type;
+              return (
+                <div key = {entry.label}>
+                  <label> {label} </label>
+                  <input className = 'w3-input ' type = 'text' /> 
+                  <p />
+                </div>
+              );
+            })
+          }
+        </div>
+
+
+        <button className = 'w3-button w3-block w3-white w3-border-top' 
+                onClick = {() => {if (_popup) {_popup.resolve()} }} > 
+          { label && util.isString(label) ? label : 'Done' } 
+        </button>
+
+      </div>
+    </Popup>
+  );
+  return {
+    diag: diag,
+    resolve: onFinish || function(){},
+    reject: onFinish|| function(){},
+    options
+  };
+}
 
 export const diag = {
   alert,
-  confirm
+  confirm,
+  prompt
 };

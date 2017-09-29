@@ -7,7 +7,7 @@
 
 .__page_popup_floater {
   float: left;
-  height: 40%;
+  height: 30%;
   width: 100%;
   margin-bottom: -50px;
 }
@@ -15,7 +15,6 @@
   clear: both;
   display: table;
   margin: 0 auto;
-  background-color: yellow;
 }
 
 .__page_popup_mask {

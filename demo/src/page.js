@@ -127,6 +127,24 @@ class Demo extends Component {
 		}
 	}
 
+	showPrompt() {
+		if (this.page) {
+			this.page.popup(diag.prompt({
+				type: 'info',
+				title: <span> <b>Prompt</b> Dialog Example </span>,
+				detail: [
+					{label: 'First name', type: 'text'}, 
+					{label: 'Last name', type: 'text'},
+				],
+				onFinish: () => console.log('prompt dialog closed'),
+				label: 'Submit',
+				options: {
+					animation : { enter : 'slide-top'}
+				}
+			}));
+		}
+	}
+
 	pushOverlay () {
 		if (this.page) {
 			i++;
@@ -161,6 +179,7 @@ class Demo extends Component {
 					<button onClick = {() => this.showPopup()}> Popup </button>
 					<button onClick = {() => this.showAlert()}> Alert </button>
 					<button onClick = {() => this.showConfirm()}> Confirm </button>
+					<button onClick = {() => this.showPrompt()}> Prompt </button>
 				</div>
 
 				<div>
