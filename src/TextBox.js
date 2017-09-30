@@ -47,11 +47,11 @@ class TextBox extends BaseComponent {
     }
 
     return (
-      <div className = '__textbox'>
-        <div style = {_labelStyle} > 
+      <div className = '__textbox w3-cell-row'>
+        <div className = 'w3-cell' style = {_labelStyle} > 
           <label  > {label} </label> 
         </div>
-        <div style = {_inputStyle} >
+        <div className = 'w3-cell' style = {_inputStyle} >
         <input  className = 'w3-input' 
                 type = {type}
                 placeholder = {placeholder}
