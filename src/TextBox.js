@@ -3,6 +3,7 @@
 import React from 'react'
 
 import BaseComponent from './BaseComponent'
+import util from './lib/util'
 
 /**
  * TextBox component
@@ -15,7 +16,7 @@ import BaseComponent from './BaseComponent'
  * @param {Boolean}   border - border of text input
  * @param {Boolean}   animate - animate the input
  * @param {String}    placeholder - placeholder of the input 
- * @param {Function}  autocomplete - function return a list of suggestion
+ * @param {Function}  dataList - function return a list of suggestion
  * @param {Boolean}   dev - developing layout feature
  * */
 class TextBox extends BaseComponent {
@@ -83,25 +84,29 @@ class TextBox extends BaseComponent {
   }
 
   suggestAutoComplete(text) {
-    const list = [
-      'Brune Waterpass',
-      'Elen Whitewalk',
-      'Catherin Stormclock',
-      'Barce Leona'
-    ];
+    const dataList = this.props.dataList;
+    
+    if (util.isFunction(dataList)) {
+      return dataList(text);
+    } 
+    
+    /* dataList is an array of text */
+
+    const list = dataList;
+
+    if (!(list && list.length > 0)) {
+      return '';
+    }
 
     if (text.length === 0) {
       return '';
     }
 
-    const patt = new RegExp(`^${text}`, 'i');
-
-    const suggestion = list.filter(elem => {
-      return patt.test(elem);
-    });
+    const suggestion = this.matchingList(list, text);
 
     if (suggestion.length > 0) {
       // return with matching case with user input
+      const patt = new RegExp(`^${text}`, 'i');
       const _suggLower = suggestion[0].replace(patt, text.toLowerCase());
       const _sugg = _suggLower.replace(patt, text);
       return _sugg;
@@ -109,6 +114,14 @@ class TextBox extends BaseComponent {
       return '';
     }
   
+  }
+
+  matchingList(list, text) {
+    const patt = new RegExp(`^${text}`, 'i');
+    
+    return list.filter(elem => {
+      return patt.test(elem);
+    });
   }
 
 }

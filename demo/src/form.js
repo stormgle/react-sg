@@ -24,6 +24,7 @@ class App extends Component {
             label = 'Display name'
             placeholder = 'J.Doe'
             border
+            dataList = {['Bennie Wolf', 'Alex Rice', 'Jon White', 'Bradon Brown']}
           />
         </View>
       </Page>
