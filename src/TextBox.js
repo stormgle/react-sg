@@ -29,7 +29,7 @@ class TextBox extends BaseComponent {
 
     this.state = {text : ''};
 
-    this.bind('suggestAutoComplete');
+    this.bind('suggestAutoComplete', 'matchingDataList');
 
   }
 
@@ -52,7 +52,8 @@ class TextBox extends BaseComponent {
       _labelStyle.padding = '8px';
     }
 
-    const suggestion = this.suggestAutoComplete(this.state.text);
+    const suggestionList = this.matchingDataList(this.state.text);
+    const suggestion = this.suggestAutoComplete(suggestionList, this.state.text);
     const _suggestionStyle = {
       position: 'absolute', 
       top: 0, 
@@ -75,6 +76,23 @@ class TextBox extends BaseComponent {
                   placeholder = {placeholder}
                   />         
         </div>
+        { /* show sugession list if any */
+          suggestionList.length > 0 ?
+            <div style = {{ marginTop: '10px' }} > 
+              <ul className = "w3-ul w3-border w3-card-4">
+                {
+                  suggestionList.map(item => {
+                    return (
+                      <li key = {item.__index} > {item.text} </li>
+                    )
+                  })
+                }
+            </ul>
+            </div>
+          :
+            null
+        }
+        
       </div>
     );
 
@@ -84,16 +102,25 @@ class TextBox extends BaseComponent {
     this.setState({ text });
   }
 
-  suggestAutoComplete(text) {
-    const dataList = this.props.dataList;
-    
-    if (util.isFunction(dataList)) {
-      return dataList(text);
-    } 
+  suggestAutoComplete(suggestionList, text) { 
+
+    if (suggestionList.length > 0) {
+      // return with matching case with user input
+      const patt = new RegExp(`^${text}`, 'i');
+      const _suggLower = suggestionList[0].text.replace(patt, text.toLowerCase());
+      const _sugg = _suggLower.replace(patt, text);
+      return _sugg;
+    } else {
+      return '';
+    }
+  
+  }
+
+  matchingDataList(text) {
+
+    const list = this.props.dataList;
     
     /* dataList is an array of text */
-
-    const list = dataList;
 
     if (!(list && list.length > 0)) {
       return '';
@@ -103,21 +130,6 @@ class TextBox extends BaseComponent {
       return '';
     }
 
-    const suggestion = this.matchingList(list, text);
-console.log(suggestion);
-    if (suggestion.length > 0) {
-      // return with matching case with user input
-      const patt = new RegExp(`^${text}`, 'i');
-      const _suggLower = suggestion[0].text.replace(patt, text.toLowerCase());
-      const _sugg = _suggLower.replace(patt, text);
-      return _sugg;
-    } else {
-      return '';
-    }
-  
-  }
-
-  matchingList(list, text) {
     const patt = new RegExp(`^${text}`, 'i');
 
     const filteredList = list.filter(elem => {
