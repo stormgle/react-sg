@@ -4,6 +4,7 @@ import React from 'react'
 
 import BaseComponent from './BaseComponent'
 import util from './lib/util'
+import log from './lib/log'
 
 /**
  * TextBox component
@@ -103,11 +104,11 @@ class TextBox extends BaseComponent {
     }
 
     const suggestion = this.matchingList(list, text);
-
+console.log(suggestion);
     if (suggestion.length > 0) {
       // return with matching case with user input
       const patt = new RegExp(`^${text}`, 'i');
-      const _suggLower = suggestion[0].replace(patt, text.toLowerCase());
+      const _suggLower = suggestion[0].text.replace(patt, text.toLowerCase());
       const _sugg = _suggLower.replace(patt, text);
       return _sugg;
     } else {
@@ -118,9 +119,31 @@ class TextBox extends BaseComponent {
 
   matchingList(list, text) {
     const patt = new RegExp(`^${text}`, 'i');
+
+    const filteredList = list.filter(elem => {
+      if (util.isString(elem)) {
+        return patt.test(elem);
+      } else if (util.isObject(elem) && elem.text) {
+        return patt.test(elem.text);
+      } else {
+        log.error({
+          root: 'TextBox',
+          message: 'Invalid DataList',
+          detail: 'The prop DataList must be an array of string or object that content text property'
+        });
+      }
+    });
     
-    return list.filter(elem => {
-      return patt.test(elem);
+    return filteredList.map((elem, __index) => {
+      if (util.isString(elem)) {
+        if (patt.test(elem)) {
+          return {__index, text: elem};
+        }
+      } else if (util.isObject(elem) && elem.text) {
+        if (patt.test(elem.text)) {
+          return {__index, ...elem};
+        }
+      }
     });
   }
 

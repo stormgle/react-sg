@@ -25,6 +25,14 @@ class App extends Component {
             placeholder = 'J.Doe'
             border
             dataList = {['Bennie Wolf', 'Alex Rice', 'Jon White', 'Bradon Brown']}
+            /*
+            dataList = {[
+              {text: 'Bennie Wolf'}, 
+              {text: 'Alex Rice'}, 
+              {text: 'Jon White'}, 
+              {text: 'Bradon Brown'}
+            ]}
+            */
           />
         </View>
       </Page>
