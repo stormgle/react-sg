@@ -8,8 +8,8 @@
     "build": "npm run clean && babel src -d dist",
     "prepublish": "npm run build",
     "bundle": "npm run build && babel demo/src -d demo/lib && webpack",
-    "start": "npm run bundle && node demo/web/server",
-    "demo": "npm run server"
+    "server": "node demo/web/server",
+    "start": "npm run bundle && npm run server"
   },
   "repository": {
     "type": "git",
