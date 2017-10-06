@@ -77,6 +77,9 @@ class TextBox extends BaseComponent {
                   />         
         </div>
         { /* show sugession list if any */
+          suggestionList.length == 0 ? null :
+          this.props.renderSuggestionList ?
+          this.props.renderSuggestionList(suggestionList, this.state.text) :
           this._renderSuggestionList(suggestionList, this.state.text)
         }
         
@@ -147,33 +150,28 @@ class TextBox extends BaseComponent {
   }
 
   _renderSuggestionList(suggestionList, text) {
-    if (suggestionList.length > 0) {
-      return (
-        <div style = {{ marginTop: '10px' }} > 
-          <ul className = "w3-ul w3-border w3-card-4">
-            {
-              suggestionList.map(item => {
-                const matchText = item.text.substr(0, text.length);
-                const subText = item.text.substr(text.length);
-                return (
-                  <li key = {item.__index} 
-                      className = 'w3-hover-light-grey' > 
-                      <span style = {{fontWeight: 'bold'}} > 
-                        {matchText} 
-                      </span><span> 
-                        {subText} 
-                      </span>
-                  </li>
-                )
-              })
-            }
-          </ul>
-        </div>
-      );
-    } else {
-      return null;
-    }
-    
+    return (
+      <div style = {{ marginTop: '10px' }} > 
+        <ul className = "w3-ul w3-border w3-card-4">
+          {
+            suggestionList.map(item => {
+              const matchText = item.text.substr(0, text.length);
+              const subText = item.text.substr(text.length);
+              return (
+                <li key = {item.__index} 
+                    className = 'w3-hover-light-grey' > 
+                    <span style = {{fontWeight: 'bold'}} > 
+                      {matchText} 
+                    </span><span> 
+                      {subText} 
+                    </span>
+                </li>
+              )
+            })
+          }
+        </ul>
+      </div>
+    );   
   }
 
 }

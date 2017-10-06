@@ -16,6 +16,22 @@ class App extends Component {
     super(props);
   }
 
+  renderSuggestionList(list, text) {
+    return(
+      <div>
+        <ul>
+          {
+            list.map(item => {
+              return (
+                <li key={item.__index}> {item.text} </li>
+              )
+            })
+          }
+        </ul>
+      </div>
+    )
+  }
+
   render() {
     return (
       <Page >
@@ -33,6 +49,7 @@ class App extends Component {
               {text: 'Bradon Brown'}
             ]}
             */
+            //renderSuggestionList = {this.renderSuggestionList}
           />
         </View>
       </Page>
