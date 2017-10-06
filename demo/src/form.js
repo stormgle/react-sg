@@ -51,6 +51,9 @@ class App extends Component {
             */
             //renderSuggestionList = {this.renderSuggestionList}
           />
+          <label>
+            Example of Form and Textbox
+          </label>
         </View>
       </Page>
     );

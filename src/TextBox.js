@@ -27,9 +27,9 @@ class TextBox extends BaseComponent {
   constructor(props) {
     super(props);
 
-    this.state = {text : ''};
+    this.state = {text : '', showSuggestion : false};
 
-    this.bind('suggestAutoComplete', 'matchingDataList');
+    this.bind('suggestAutoComplete', 'matchingDataList', 'onFocus', 'onBlur');
 
   }
 
@@ -74,10 +74,13 @@ class TextBox extends BaseComponent {
                   onChange = {e => this.updateText(e.target.value)}
                   type = {type}
                   placeholder = {placeholder}
+                  value = {this.state.text}
+                  onFocus = {this.onFocus}
+                  onBlur = {this.onBlur}
                   />         
         </div>
         { /* show sugession list if any */
-          suggestionList.length == 0 ? null :
+          !this.state.showSuggestion || suggestionList.length == 0 ? null :
           this.props.renderSuggestionList ?
           this.props.renderSuggestionList(suggestionList, this.state.text) :
           this._renderSuggestionList(suggestionList, this.state.text)
@@ -86,6 +89,17 @@ class TextBox extends BaseComponent {
       </div>
     );
 
+  }
+
+  onFocus() {
+    this.setState({ showSuggestion : true });
+  }
+
+  onBlur() {
+    /* delay for finishing onclick event of suggestion list */
+    setTimeout(() => {
+      this.setState({ showSuggestion : true });
+    }, 200);   
   }
 
   updateText(text) {
@@ -150,8 +164,13 @@ class TextBox extends BaseComponent {
   }
 
   _renderSuggestionList(suggestionList, text) {
+    const _style = {
+      backgroundColor: 'white', 
+      position: 'absolute', 
+      marginTop: '2px',
+    };
     return (
-      <div style = {{ marginTop: '10px' }} > 
+      <div style = {_style} > 
         <ul className = "w3-ul w3-border w3-card-4">
           {
             suggestionList.map(item => {
@@ -159,7 +178,9 @@ class TextBox extends BaseComponent {
               const subText = item.text.substr(text.length);
               return (
                 <li key = {item.__index} 
-                    className = 'w3-hover-light-grey' > 
+                    className = 'w3-hover-light-grey' 
+                    onClick = {() =>this.updateText(item.text)}
+                >
                     <span style = {{fontWeight: 'bold'}} > 
                       {matchText} 
                     </span><span> 
