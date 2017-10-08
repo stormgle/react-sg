@@ -17,7 +17,9 @@ import log from './lib/log'
  * @param {Boolean}   border - border of text input
  * @param {Boolean}   animate - animate the input
  * @param {String}    placeholder - placeholder of the input 
- * @param {Function}  dataList - function return a list of suggestion
+ * @param {Function}  dataList - list of suggestion for matching
+ * @param {Function}  renderMatchedList - function to render matched list
+ * @param {Function}  sortMatchedList - function to sort matched list <--
  * @param {Boolean}   dev - developing layout feature
  * */
 class TextBox extends BaseComponent {
@@ -29,7 +31,12 @@ class TextBox extends BaseComponent {
 
     this.state = {text : '', showSuggestion : false};
 
-    this.bind('suggestAutoComplete', 'matchingDataList', 'onFocus', 'onBlur');
+    this.bind(
+      'suggestAutoComplete', 
+      'matchingDataList', 
+      'onFocus', 'onBlur',
+      'updateText'
+    );
 
   }
 
@@ -52,8 +59,8 @@ class TextBox extends BaseComponent {
       _labelStyle.padding = '8px';
     }
 
-    const suggestionList = this.matchingDataList(this.state.text);
-    const suggestion = this.suggestAutoComplete(suggestionList, this.state.text);
+    const matchedList = this.matchingDataList(this.state.text);
+    const suggestion = this.suggestAutoComplete(matchedList, this.state.text);
     const _suggestionStyle = {
       position: 'absolute', 
       top: 0, 
@@ -80,10 +87,10 @@ class TextBox extends BaseComponent {
                   />         
         </div>
         { /* show sugession list if any */
-          !this.state.showSuggestion || suggestionList.length == 0 ? null :
-          this.props.renderSuggestionList ?
-          this.props.renderSuggestionList(suggestionList, this.state.text) :
-          this._renderSuggestionList(suggestionList, this.state.text)
+          !this.state.showSuggestion || matchedList.length == 0 ? null :
+          this.props.renderMatchedList ?
+          this.props.renderMatchedList(matchedList, this.state.text, this.updateText) :
+          this._renderMatchedList(matchedList, this.state.text)
         }
         
       </div>
@@ -98,7 +105,7 @@ class TextBox extends BaseComponent {
   onBlur() {
     /* delay for finishing onclick event of suggestion list */
     setTimeout(() => {
-      this.setState({ showSuggestion : true });
+      this.setState({ showSuggestion : false });
     }, 200);   
   }
 
@@ -106,12 +113,12 @@ class TextBox extends BaseComponent {
     this.setState({ text });
   }
 
-  suggestAutoComplete(suggestionList, text) { 
+  suggestAutoComplete(matchedList, text) { 
 
-    if (suggestionList.length > 0) {
+    if (matchedList.length > 0) {
       // return with matching case with user input
       const patt = new RegExp(`^${text}`, 'i');
-      const _suggLower = suggestionList[0].text.replace(patt, text.toLowerCase());
+      const _suggLower = matchedList[0].text.replace(patt, text.toLowerCase());
       const _sugg = _suggLower.replace(patt, text);
       return _sugg;
     } else {
@@ -163,7 +170,7 @@ class TextBox extends BaseComponent {
     });
   }
 
-  _renderSuggestionList(suggestionList, text) {
+  _renderMatchedList(matchedList, text) {
     const _style = {
       backgroundColor: 'white', 
       position: 'absolute', 
@@ -173,7 +180,7 @@ class TextBox extends BaseComponent {
       <div style = {_style} > 
         <ul className = "w3-ul w3-border w3-card-4">
           {
-            suggestionList.map(item => {
+            matchedList.map(item => {
               const matchText = item.text.substr(0, text.length);
               const subText = item.text.substr(text.length);
               return (

@@ -16,14 +16,14 @@ class App extends Component {
     super(props);
   }
 
-  renderSuggestionList(list, text) {
+  renderMatchedList(list, text, selectText) {
     return(
       <div>
         <ul>
           {
             list.map(item => {
               return (
-                <li key={item.__index}> {item.text} </li>
+                <li key={item.__index} onClick={() => selectText(item.text)}> {item.text} </li>
               )
             })
           }
@@ -49,7 +49,7 @@ class App extends Component {
               {text: 'Bradon Brown'}
             ]}
             */
-            //renderSuggestionList = {this.renderSuggestionList}
+            //renderMatchedList = {this.renderMatchedList}
           />
           <label>
             Example of Form and Textbox
