@@ -19,7 +19,7 @@ import log from './lib/log'
  * @param {String}    placeholder - placeholder of the input 
  * @param {Function}  dataList - list of suggestion for matching
  * @param {Function}  renderMatchedList - function to render matched list
- * @param {Function}  sortMatchedList - function to sort matched list <--
+ * @param {Function}  sortMatchedList - function to sort matched list <-- ???
  * @param {Boolean}   dev - developing layout feature
  * */
 class TextBox extends BaseComponent {
@@ -175,6 +175,7 @@ class TextBox extends BaseComponent {
       backgroundColor: 'white', 
       position: 'absolute', 
       marginTop: '2px',
+      cursor: 'default'
     };
     return (
       <div style = {_style} > 

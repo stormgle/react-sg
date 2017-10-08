@@ -40,7 +40,7 @@ class App extends Component {
             label = 'Display name'
             placeholder = 'J.Doe'
             border
-            dataList = {['Bennie Wolf', 'Alex Rice', 'Jon White', 'Bradon Brown']}
+            dataList = {['Bennie Wolf', 'Alex Rice', 'Jon White', 'Bradon Brown', 'Barax Obama']}
             /*
             dataList = {[
               {text: 'Bennie Wolf'}, 
